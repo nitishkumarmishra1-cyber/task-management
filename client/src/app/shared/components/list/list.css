@@ -1,0 +1,11 @@
+/* Target the Angular Material cell class for your actions column */
+.mat-column-actions {
+  text-align: right;
+  
+  /* Select the wrapper element or target the table cells directly */
+  display: flex;
+  justify-content: flex-end; /* Pushes the icons neatly to the right edge */
+  align-items: center;       /* Centers them vertically with the text */
+  gap: 8px;                  /* Adds clean breathing room between the two buttons */
+  height: 100%;              /* Ensures alignment works over the row cell height */
+}

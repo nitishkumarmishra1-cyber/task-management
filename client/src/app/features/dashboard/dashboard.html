@@ -1,0 +1,20 @@
+<div class="dashboard-card mat-elevation-z1">
+
+    <div class="card-header mb-4">
+        <h1 class="page-title m-0">Tasks</h1>
+        <button mat-raised-button color="primary" class="add-btn" (click)="openTaskDialog()">
+            <mat-icon>add</mat-icon> Add New Task
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        @if (tasks.length === 0) {
+        <div class="empty-state text-center p-5">
+            <mat-icon color="disabled">assignment</mat-icon>
+            <p class="text-muted">No tasks assigned yet.</p>
+        </div>
+        } @else {
+        <app-list [data]="tasks" [columns]="columns" [options]="options"></app-list>
+        }
+    </div>
+</div>

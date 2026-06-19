@@ -1,0 +1,24 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* Ensures top items line up with bottom items */
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Update your Main Routing Content Wrapper styles */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  background-color: #f8f9fa; /* Sleek light gray background */
+  padding: 2.5rem 24px; /* Padding on sides protects smaller screens */
+}
+
+.content-wrapper > * {
+  width: 100%;
+  max-width: 1200px; /* Exactly matches the header width */
+}
