@@ -1,25 +1,33 @@
-import { STATUS } from "../shared/interfaces";
+import { ROLE, STATUS } from "../shared/interfaces";
 
 export class Constant {
     // auth api endpoints
-    public static readonly LOGIN_URL = 'auth/login';
-    public static readonly LOGOUT_URL = 'auth/logout';
+    public static readonly LOGIN = 'auth/login';
+    public static readonly LOGOUT = 'auth/logout';
     public static readonly USER_STORE_KEY = `user-login-cortext-ai-user-status`;
 
-    // chat api end-points
-    public static readonly USER_SIDEBAR_URL = 'chat/sidebar';
-
     // users api end-points
-    public static readonly CREATE_USER_URL = 'user';
-    public static readonly USER_LIST = 'user/users';
+    public static readonly CREATE_USER = 'user';
+    public static readonly USER_LIST = 'user/list';
     public static readonly USER_ME = 'user/me';
-    public static readonly USER_BY_ID = 'user/';
-    public static readonly USER_PATCH = 'user/';
+    public static readonly ASSIGNABLE_USER = 'user/assignable';
+    public static readonly UPDATE_USER = 'user/';
     public static readonly DELETE_USER = 'user/';
 
+    // task api end-points
+    public static readonly CREATE_TASK = 'task';
+    public static readonly UPDATE_TASK = 'task/';
+    public static readonly GET_TASK = 'task';
+    public static readonly DELETE_TASK = 'task/';
+    public static readonly ALL_TASK = 'task/all';
 
     public static readonly STATUS_OPTIONS: { value: STATUS, label: string }[] = [
         { value: STATUS.PENDING, label: 'Pending' },
         { value: STATUS.COMPLETED, label: 'Completed' }
+    ];
+
+    public static readonly ROLE_OPTIONS: { value: ROLE, label: string }[] = [
+        { value: ROLE.USER, label: 'User' },
+        { value: ROLE.TEAM_LEAD, label: 'Team-lead' }
     ];
 }

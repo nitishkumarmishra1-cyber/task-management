@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Header } from '../header/header';
 import { MaterialModule } from '../../shared/modules/material-module';
 import { ROLE, SidebarMenuItem } from '../../shared/interfaces';
@@ -7,7 +7,7 @@ import { Auth } from '../../shared/services/auth';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [MaterialModule, RouterOutlet, RouterLink, Header],
+  imports: [MaterialModule, Header, RouterModule],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
 })

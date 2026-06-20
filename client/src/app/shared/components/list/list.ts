@@ -31,6 +31,7 @@ export class List implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes)
     if (changes['data']) {
       this.dataSource.data = this.data || [];
     }

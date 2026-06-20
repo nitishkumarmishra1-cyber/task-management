@@ -22,7 +22,7 @@ export class AuthService {
 
         const token = signToken({ id: user._id, role: user.role });
 
-        const userObj = user.toObject();
+        const userObj = user.toJSON();
         return { token, user: userObj };
     }
 }

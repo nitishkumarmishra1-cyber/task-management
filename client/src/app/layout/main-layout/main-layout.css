@@ -39,3 +39,8 @@
         height: 28px;
     }
 }
+
+.active-link {
+  background-color: rgba(0, 0, 0, 0.06) !important;  /* !important try karo agar override ho raha ho */
+  font-weight: 500;
+}

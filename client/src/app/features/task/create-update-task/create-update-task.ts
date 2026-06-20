@@ -1,8 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ITask, STATUS } from '../../../shared/interfaces';
+import { ApiResponse, ITask, IUser, STATUS } from '../../../shared/interfaces';
 import { MaterialModule } from '../../../shared/modules/material-module';
+import { Constant } from '@app/utility/constant';
+import { Task } from '@app/shared/services/task';
+import { AlertService } from '@app/shared/services/snackbar';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Auth } from '@app/shared/services/auth';
 
 @Component({
   selector: 'app-create-update-task',
@@ -18,22 +23,24 @@ import { MaterialModule } from '../../../shared/modules/material-module';
   `]
 })
 export class CreateUpdateTask implements OnInit {
+  private task = inject(Task);
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<CreateUpdateTask>);
-  public data : { task : ITask } | any = inject<CreateUpdateTask>(MAT_DIALOG_DATA);
+  private alert = inject(AlertService);
+  private auth = inject(Auth);
+  public data : { task : ITask, canReassign : boolean, assignableUsers : IUser[] } | any = inject<CreateUpdateTask>(MAT_DIALOG_DATA);
 
   taskForm!: FormGroup;
   isEditMode = false;
-  statusEnum = STATUS; // Expose enum to template
+  STATUS_OPTIONS = Constant.STATUS_OPTIONS;
+  isSubmitting = signal(false);
 
   ngOnInit(): void {
-    // If a task object was sent to the dialog, it means we are in edit mode
     this.isEditMode = !!this.data?.task;
     this.initForm();
   }
 
   private initForm(): void {
-    // Pre-populate fields if editing; fall back to defaults if creating
     this.taskForm = this.fb.group({
       title: [
         this.data?.task?.title || '',
@@ -45,28 +52,45 @@ export class CreateUpdateTask implements OnInit {
       ],
       status: [
         this.data?.task?.status || STATUS.PENDING,
-        Validators.required
+        [Validators.required]
       ],
-      assignedTo: [
-        this.data?.task?.assignedTo || ''
+      assignTo: [
+        this.data?.task?.assignTo?.id ?? this.auth.user?.id,
+        [Validators.required]
       ]
     });
   }
 
-  // Getters for cleaner field validation lookups in your HTML template
   get title() { return this.taskForm.get('title'); }
   get description() { return this.taskForm.get('description'); }
 
   onSubmit(): void {
-    if (this.taskForm.valid) {
-      // Send the updated form snapshot back to the parent list component
-      this.dialogRef.close(this.taskForm.value);
-    } else {
+    if(this.taskForm.invalid) {
       this.taskForm.markAllAsTouched();
+      return;
     }
+
+    this.isSubmitting.set(true);
+    const payload = { ...this.taskForm.value };
+
+    let $performAction = this.task.create(payload);
+    if(this.isEditMode) {
+      $performAction = this.task.update(this.data?.task?.id, payload)
+    }
+
+    $performAction.subscribe({
+      next: (response: ApiResponse<ITask>) => {
+        this.alert.success(response.message);
+        this.dialogRef.close(response.data)
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isSubmitting.set(false);
+        this.alert.error(error.error.message);
+      }
+    })
   }
 
   onCancel(): void {
-    this.dialogRef.close(null); // Return null to signify no changes were made
+    this.dialogRef.close(null);
   }
 }

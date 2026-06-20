@@ -17,8 +17,9 @@
             <mat-label>Filter by Status</mat-label>
             <mat-select [(value)]="selectedStatusFilter" (selectionChange)="onStatusFilterChange()">
                 <mat-option value="all">All</mat-option>
-                <mat-option value="pending">Pending</mat-option>
-                <mat-option value="completed">Completed</mat-option>
+                @for (item of STATUS_OPTIONS; track $index) {
+                <mat-option [value]="item.value">{{item.label}}</mat-option>
+                }
             </mat-select>
         </mat-form-field>
     </div>
@@ -31,7 +32,8 @@
             <mat-icon class="empty-icon" color="disabled">assignment</mat-icon>
             <p class="empty-title m-0">No tasks found</p>
             <p class="empty-subtitle text-muted">
-                {{ selectedStatusFilter === 'all' ? 'No tasks assigned yet.' : 'No ' + selectedStatusFilter + ' tasks right now.' }}
+                {{ selectedStatusFilter === 'all' ? 'No tasks assigned yet.' : 'No ' + selectedStatusFilter + ' tasks
+                right now.' }}
             </p>
         </div>
         } @else {

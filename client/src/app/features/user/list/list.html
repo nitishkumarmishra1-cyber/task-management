@@ -3,7 +3,7 @@
     <div class="card-header mb-4">
         <div class="title-block">
             <h1 class="page-title m-0">Users</h1>
-            <span class="task-count-badge">{{ tasks.length }} {{ tasks.length === 1 ? 'task' : 'tasks' }}</span>
+            <span class="task-count-badge">{{ users.length }}</span>
         </div>
         <button mat-raised-button color="primary" class="add-btn" (click)="openTaskDialog()">
             <mat-icon>add</mat-icon> Add New User
@@ -26,7 +26,7 @@
     <mat-divider class="mb-3"></mat-divider>
 
     <div class="table-responsive">
-        @if (tasks.length === 0) {
+        @if (users.length === 0) {
         <div class="empty-state text-center p-5">
             <mat-icon class="empty-icon" color="disabled">assignment</mat-icon>
             <p class="empty-title m-0">No tasks found</p>
@@ -35,7 +35,7 @@
             </p>
         </div>
         } @else {
-        <app-list [data]="tasks" [columns]="columns" [options]="options"></app-list>
+        <app-list [data]="users" [columns]="columns" [options]="options"></app-list>
         }
     </div>
 </div>

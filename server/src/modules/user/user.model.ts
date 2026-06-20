@@ -37,13 +37,30 @@ const userSchema = new Schema({
     },
     reportTo: {
         type: Types.ObjectId,
-        ref : 'user'
+        ref: 'user'
     },
     isActive: {
         type: Boolean,
         default: true,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
     }
 }, { timestamps: true });
+
+userSchema.virtual('id').get(function () {
+    return this._id.toHexString();
+});
+
+userSchema.set('toJSON', {
+    virtuals: true,
+    transform: (doc, ret) => {
+        delete (ret as any)._id;
+        delete (ret as any).__v;
+        delete (ret as any).password;
+    }
+});
 
 const User = connection.models.User || model('User', userSchema, 'user');
 export default User;

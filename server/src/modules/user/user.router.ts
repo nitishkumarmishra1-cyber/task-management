@@ -14,7 +14,15 @@ userRoutes.post(
     authorize(ROLE.MANAGER),
     asyncHandler(controller.register.bind(controller))
 );
-
-
+userRoutes.get(
+    '/assignable',
+    authorize(ROLE.MANAGER, ROLE.TEAM_LEAD),
+    asyncHandler(controller.assignableUsers.bind(controller))
+);
+userRoutes.get(
+    '/list',
+    authorize(ROLE.MANAGER, ROLE.TEAM_LEAD),
+    asyncHandler(controller.userList.bind(controller))
+);
 
 export default userRoutes;

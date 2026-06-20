@@ -36,11 +36,11 @@ export class Auth {
   }
 
   public login(data: ILogin): Observable<ApiResponse<IUser>> {
-    return this.api.post<ApiResponse<IUser>>(Constant.LOGIN_URL, data)
+    return this.api.post<ApiResponse<IUser>>(Constant.LOGIN, data)
   }
 
   public logout(): void {
-    this.api.post<ApiResponse<IUser>>(Constant.LOGOUT_URL, {}).subscribe({
+    this.api.post<ApiResponse<IUser>>(Constant.LOGOUT, {}).subscribe({
       next: () => {
         this.alert.success(`Logged out successfully!`);
         this.handleCleanupAndNavigate();

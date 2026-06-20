@@ -10,23 +10,27 @@ import { Constant } from '../../utility/constant';
 export class User {
   private api = inject(Api);
 
-  public create(data : IUser) : Observable<ApiResponse<IUser>> {
-    return this.api.post<ApiResponse<IUser>>(Constant.CREATE_USER_URL, data)
+  public create(data: IUser): Observable<ApiResponse<IUser>> {
+    return this.api.post<ApiResponse<IUser>>(Constant.CREATE_USER, data)
   }
 
-  public update(id : string, data : IUser) : Observable<ApiResponse<IUser>> {
-    return this.api.patch<ApiResponse<IUser>>(`${Constant.USER_PATCH}${id}`, data)
+  public update(id: string, data: IUser): Observable<ApiResponse<IUser>> {
+    return this.api.patch<ApiResponse<IUser>>(`${Constant.UPDATE_USER}${id}`, data)
   }
 
-  public meProfile() : Observable<ApiResponse<IUser>> {
+  public meProfile(): Observable<ApiResponse<IUser>> {
     return this.api.get<ApiResponse<IUser>>(`${Constant.USER_ME}`)
   }
 
-  public userList() : Observable<ApiResponse<IUser[]>> {
+  public userList(): Observable<ApiResponse<IUser[]>> {
     return this.api.get<ApiResponse<IUser[]>>(`${Constant.USER_LIST}`)
   }
 
-  public delete(id : string) : Observable<ApiResponse<IUser[]>> {
+  public delete(id: string): Observable<ApiResponse<IUser[]>> {
     return this.api.delete<ApiResponse<IUser[]>>(`${Constant.DELETE_USER}${id}`)
+  }
+
+  public assignableUsers(): Observable<ApiResponse<IUser[]>> {
+    return this.api.get<ApiResponse<IUser[]>>(`${Constant.ASSIGNABLE_USER}`)
   }
 }

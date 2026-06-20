@@ -26,6 +26,12 @@ export const MESSAGES = {
         UPDATED: 'User updated successfully',
         DELETED: 'User deleted successfully',
     },
+    TASK: {
+        NOT_FOUND: 'Task not found',
+        CREATED: 'Task created successfully',
+        UPDATED: 'Task updated successfully',
+        DELETED: 'Task deleted successfully',
+    },
     VALIDATION: {
         FAILED: 'Validation failed.',
     },

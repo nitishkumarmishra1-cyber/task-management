@@ -1,6 +1,6 @@
 import User from './user.model.js';
 import { CreateUserDto, UpdateUserDto } from './user.dto.js';
-import { ObjectId } from 'mongoose';
+import { toObjectId } from '../../shared/utility/util.js';
 
 export class UserRepository {
     async create(data: CreateUserDto) {
@@ -19,8 +19,16 @@ export class UserRepository {
         return User.findOne({ email }).select('+password');
     }
 
-    async findAll(skip = 0, limit = 10) {
-        return User.find().skip(skip).limit(limit);
+    async findAll(userId : string) {
+        return User.find({ _id : { $ne : toObjectId(userId) } });
+    }
+
+    async findAssignableUsers(userId : string) {
+        return User.find()
+    }
+
+    async findReportees(userId : string) {
+        return User.find({ reportTo : toObjectId(userId) })
     }
 
     async updateById(id: string, data: UpdateUserDto) {
