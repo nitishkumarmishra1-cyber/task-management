@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ITask, STATUS } from '../../shared/interfaces';
-import { MaterialModule } from '../../shared/modules/material-module';
+import { ITask, STATUS } from '../../../shared/interfaces';
+import { MaterialModule } from '../../../shared/modules/material-module';
 
 @Component({
   selector: 'app-create-update-task',

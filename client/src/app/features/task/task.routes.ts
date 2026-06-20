@@ -3,7 +3,7 @@ import { Dashboard } from './dashboard/dashboard';
 
 export const TASK_ROUTES: Routes = [
     {
-        path : 'dashboard',
+        path : '',
         component : Dashboard
     }
 ];

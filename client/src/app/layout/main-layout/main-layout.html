@@ -1,4 +1,27 @@
-<app-header></app-header>
-<main class="content-wrapper">
-  <router-outlet></router-outlet> 
-</main>
+<mat-sidenav-container class="sidebar-shell">
+  <mat-sidenav mode="side" opened class="sidebar-panel">
+    <div class="header-container">
+      <div class="brand">
+        <mat-icon class="logo-icon">assignment_turned_in</mat-icon>
+        <span>TaskHub</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-nav-list>
+      @for (item of menuItems; track $index) {
+      <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header></app-header>
+    <main class="content-wrapper">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

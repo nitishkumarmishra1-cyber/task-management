@@ -1,6 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../shared/modules/material-module';
+import { Auth } from '../../shared/services/auth';
+import { ApiResponse, IUser } from '../../shared/interfaces';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AlertService } from '../../shared/services/snackbar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,11 +14,14 @@ import { MaterialModule } from '../../shared/modules/material-module';
   styleUrl: './login.css',
 })
 export class Login {
-  private fb : FormBuilder = inject(FormBuilder)
+  private auth = inject(Auth);
+  private fb: FormBuilder = inject(FormBuilder)
+  private alert = inject(AlertService);
+  private router = inject(Router);
+
   loginForm: FormGroup;
   hidePassword = true;
-  isSubmitting = false;
-  loginError: string = '';
+  isSubmitting = signal(false);
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -22,7 +30,6 @@ export class Login {
     });
   }
 
-  // Convenience getters so the HTML template can read field state easily
   get email() {
     return this.loginForm.get('email');
   }
@@ -32,19 +39,24 @@ export class Login {
   }
 
   onSubmit(): void {
-    this.loginError = '';
-
     if (this.loginForm.invalid) {
-      // Mark all fields as touched so validation messages show up immediately
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
     const credentials = this.loginForm.value;
 
-
-    console.log('Login submitted:', credentials);
-    this.isSubmitting = false;
+    this.auth.login(credentials).subscribe({
+      next: (response: ApiResponse<IUser>) => {
+        this.auth.update = response.data;
+        this.alert.success(response.message);
+        this.router.navigateByUrl('/task-management/task-list');
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isSubmitting.set(false);
+        this.alert.error(error.error.message);
+      }
+    })
   }
 }

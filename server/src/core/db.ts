@@ -1,17 +1,16 @@
 import { connect } from 'mongoose';
+import { AppSetting } from './setting.js';
 
 export default async function connectToDatabase() {
-    // const dbUrl = process.env.MONGO_DB_URL;
+    const dbUrl = AppSetting.dbUrl;
 
-    // if (!dbUrl) {
-    //     throw new Error('MONGO_DB_URL is missing from your environment configuration.');
-    // }
+    if (!dbUrl) {
+        throw new Error('MONGO_DB_URL is missing from your environment configuration.');
+    }
 
-    // try {
-    //     await connect(dbUrl);
-    //     console.log('MongoDB connected successfully.');
-    // } catch (error) {
-    //     console.error('MongoDB connection failed:', error);
-    //     throw error;
-    // }
+    try {
+        await connect(dbUrl);
+    } catch (error) {
+        throw error;
+    }
 }

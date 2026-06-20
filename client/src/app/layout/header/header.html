@@ -6,13 +6,27 @@
         </div>
 
         <div class="actions">
-            <button mat-button>Dashboard</button>
             <button mat-icon-button matTooltip="Notifications">
-                <mat-icon>notifications</mat-icon>
+                <mat-icon matBadge="15">notifications</mat-icon>
             </button>
-            <button mat-icon-button matTooltip="Account Profile">
+
+            <!-- Clicking this opens the profile dropdown (matMenuTriggerFor) -->
+            <button mat-icon-button matTooltip="Account Profile" [matMenuTriggerFor]="profileMenu">
                 <mat-icon>account_circle</mat-icon>
             </button>
+
+            <!-- Dropdown panel content - hidden until the button above is clicked -->
+            <mat-menu #profileMenu="matMenu" class="profile-menu-panel">
+                <div class="menu-user-info">
+                    <span class="menu-username">{{ currentUsername }}</span>
+                    <span class="menu-role">{{ currentUserRole }}</span>
+                </div>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="onLogout()">
+                    <mat-icon>logout</mat-icon>
+                    <span>Logout</span>
+                </button>
+            </mat-menu>
         </div>
     </div>
 </mat-toolbar>

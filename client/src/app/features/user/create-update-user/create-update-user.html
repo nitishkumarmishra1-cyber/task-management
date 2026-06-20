@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Task' : 'Add New Task' }}</h2>
+
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+
+        <!-- Title field -->
+        <mat-form-field appearance="outline" class="w-100 mb-2">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" placeholder="e.g. Finish quarterly report">
+            @if (title?.hasError('required')) {
+                <mat-error>Title is required</mat-error>
+            }
+            @if (title?.hasError('minlength') && !title?.hasError('required')) {
+                <mat-error>Title must be at least 3 characters</mat-error>
+            }
+        </mat-form-field>
+
+        <!-- Description field -->
+        <mat-form-field appearance="outline" class="w-100 mb-2">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="4" placeholder="Add details..."></textarea>
+            @if (description?.hasError('required')) {
+                <mat-error>Description is required</mat-error>
+            }
+            @if (description?.hasError('maxlength') && !description?.hasError('required')) {
+                <mat-error>Description cannot exceed 500 characters</mat-error>
+            }
+        </mat-form-field>
+
+        <div class="row">
+            <!-- Status dropdown mapping directly to enum parameters -->
+            <div class="col-12" [class.col-md-6]="data.canReassign" [class.col-md-12]="!data.canReassign">
+                <mat-form-field appearance="outline" class="w-100 mb-2">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option [value]="statusEnum.PENDING">Pending</mat-option>
+                        <mat-option [value]="statusEnum.COMPLETED">Completed</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Assignee field -->
+            @if (data.canReassign) {
+                <div class="col-12 col-md-6">
+                    <mat-form-field appearance="outline" class="w-100 mb-2">
+                        <mat-label>Assign To</mat-label>
+                        <mat-select formControlName="assignedTo">
+                            <mat-option value="">Unassigned</mat-option>
+                            @for (user of data.assignableUsers; track user.id) {
+                                <mat-option [value]="user.id">{{ user.username }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            }
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button type="button" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.invalid">
+            {{ isEditMode ? 'Save Changes' : 'Add Task' }}
+        </button>
+    </mat-dialog-actions>
+</form>

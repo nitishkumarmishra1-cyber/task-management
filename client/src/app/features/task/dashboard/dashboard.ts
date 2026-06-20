@@ -2,20 +2,21 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUpdateTask } from '../create-update-task/create-update-task';
-import { ITask, STATUS } from '../../shared/interfaces';
-import { MaterialModule } from '../../shared/modules/material-module';
-import { List } from '../../shared/components/list/list';
+import { ITask, STATUS } from '@app/shared/interfaces';
+import { MaterialModule } from '@app/shared/modules/material-module';
+import { List } from '@app/shared/components/list/list';
+import { ListAction, ListColumn } from '@app/shared/interfaces/table';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MaterialModule, List],
+  imports: [MaterialModule, List],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
 export class Dashboard {
+  public selectedStatusFilter: 'all' | 'pending' | 'completed' = 'all';
   private dialog = inject(MatDialog);
-  public columns: string[] = ['title', 'description', 'status', 'assignedTo', 'actions'];
   public tasks: ITask[] = [{
     id: 'task-1',
     title: 'Fix OAuth Token Expiration',
@@ -51,9 +52,16 @@ export class Dashboard {
     status: STATUS.PENDING
     // Unassigned edge case test
   }];
-  public options: any[] = [
-    { id: 1, name: 'edit', listener: (task: ITask) => this.openTaskDialog(task) },
-    { id: 2, name: 'deleted', listener: (id: string) => this.deleteTask(id) }
+  public options: ListAction[] = [
+    { id: '1', name: 'edit', listener: (task: ITask) => this.openTaskDialog(task) },
+    { id: '2', name: 'deleted', listener: (id: string) => this.deleteTask(id) }
+  ];
+
+  public columns: ListColumn[] = [
+    { key: 'title', label: 'Title', sortable: true, type: 'text', truncateLength: 0 },
+    { key: 'description', label: 'Description', sortable: false, type: 'truncate', truncateLength: 15 },
+    { key: 'status', label: 'Status', sortable: false, type: 'status-badge', truncateLength: 0 },
+    { key: 'assignedTo', label: 'Assignee', sortable: false, type: 'text', truncateLength: 0 }
   ];
 
   openTaskDialog(taskToEdit: ITask | null = null): void {
@@ -80,6 +88,10 @@ export class Dashboard {
         this.tasks = [...this.tasks, newTask];
       }
     });
+  }
+
+  onStatusFilterChange(): void {
+    // this.applyFilter();
   }
 
   deleteTask(id?: string): void {

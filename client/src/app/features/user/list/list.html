@@ -1,0 +1,41 @@
+<div class="dashboard-card mat-elevation-z1">
+
+    <div class="card-header mb-4">
+        <div class="title-block">
+            <h1 class="page-title m-0">Users</h1>
+            <span class="task-count-badge">{{ tasks.length }} {{ tasks.length === 1 ? 'task' : 'tasks' }}</span>
+        </div>
+        <button mat-raised-button color="primary" class="add-btn" (click)="openTaskDialog()">
+            <mat-icon>add</mat-icon> Add New User
+        </button>
+    </div>
+
+    <p class="page-subtitle mb-3">Manage and track all tasks assigned to you.</p>
+
+    <div class="toolbar-row mb-3">
+        <mat-form-field appearance="outline" class="status-filter">
+            <mat-label>Filter by Status</mat-label>
+            <mat-select [(value)]="selectedStatusFilter" (selectionChange)="onStatusFilterChange()">
+                <mat-option value="all">All</mat-option>
+                <mat-option value="pending">Pending</mat-option>
+                <mat-option value="completed">Completed</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <mat-divider class="mb-3"></mat-divider>
+
+    <div class="table-responsive">
+        @if (tasks.length === 0) {
+        <div class="empty-state text-center p-5">
+            <mat-icon class="empty-icon" color="disabled">assignment</mat-icon>
+            <p class="empty-title m-0">No tasks found</p>
+            <p class="empty-subtitle text-muted">
+                {{ selectedStatusFilter === 'all' ? 'No tasks assigned yet.' : 'No ' + selectedStatusFilter + ' tasks right now.' }}
+            </p>
+        </div>
+        } @else {
+        <app-list [data]="tasks" [columns]="columns" [options]="options"></app-list>
+        }
+    </div>
+</div>

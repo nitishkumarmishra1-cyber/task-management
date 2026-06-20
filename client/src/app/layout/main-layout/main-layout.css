@@ -14,3 +14,28 @@
     max-width: 1200px;
     margin: 0 auto;
 }
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 16px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+
+    .logo-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+    }
+}

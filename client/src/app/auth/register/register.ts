@@ -1,7 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../shared/modules/material-module';
 import { passwordsMatchValidator } from '../customValidator';
+import { User } from '@app/shared/services/user';
+import { ApiResponse, IUser } from '@app/shared/interfaces';
+import { AlertService } from '@app/shared/services/snackbar';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -10,24 +15,27 @@ import { passwordsMatchValidator } from '../customValidator';
   styleUrl: './register.css',
 })
 export class Register {
+  private user = inject(User)
   private fb: FormBuilder = inject(FormBuilder)
+  private alert = inject(AlertService);
+  private router = inject(Router);
+
   registerForm: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
-  isSubmitting = false;
-  registerError: string = '';
+  isSubmitting = signal(false);
 
   constructor() {
     this.registerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: passwordsMatchValidator });
   }
 
-  get username() {
-    return this.registerForm.get('username');
+  get name() {
+    return this.registerForm.get('name');
   }
 
   get email() {
@@ -43,24 +51,22 @@ export class Register {
   }
 
   onSubmit(): void {
-    this.registerError = '';
-
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
 
-    this.isSubmitting = true;
-    const { username, email, password } = this.registerForm.value;
+    this.isSubmitting.set(true);
 
-    // TODO: Replace with actual AuthService call once backend API is wired up
-    // this.authService.register({ username, email, password }).subscribe({
-    //   next: () => { /* redirect to login */ },
-    //   error: (err) => { this.registerError = 'Registration failed. Email may already be in use.'; this.isSubmitting = false; }
-    // });
-
-    console.log('Register submitted:', { username, email, password });
-    this.isSubmitting = false;
+    this.user.create(this.registerForm.value).subscribe({
+      next: (response: ApiResponse<IUser>) => {
+        this.alert.success(response.message);
+        this.router.navigateByUrl('/auth/login');
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isSubmitting.set(false);
+        this.alert.error(error.error.message);
+      }
+    })
   }
-
 }

@@ -1,37 +1,47 @@
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  height: 64px;
-}
-
 .header-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 1.1rem;
   font-weight: 500;
-  font-size: 1.25rem;
-  letter-spacing: 0.5px;
-  
-  .logo-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
-  }
+}
+
+.logo-icon {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+}
+
+.menu-user-info {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+}
+
+.menu-username {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.menu-role {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+::ng-deep .mat-mdc-menu-panel.profile-menu-panel {
+  min-width: 220px;
+  max-width: 320px;
 }

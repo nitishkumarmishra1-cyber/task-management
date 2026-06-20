@@ -1,13 +1,8 @@
 import app from './app.js';
-import { config } from 'dotenv';
-import path from 'path';
 import connectToDatabase from './core/db.js';
+import { AppSetting } from './core/setting.js';
 
-// setting up environment
-const environment = process.env.NODE_ENV || 'development';
-config({ path: path.resolve(`.env.${environment}`) });
-
-const PORT = process.env.PORT || 3000;
+const PORT = AppSetting.PORT || 3000;
 
 connectToDatabase().then(() => {
     app.listen(PORT, () => {

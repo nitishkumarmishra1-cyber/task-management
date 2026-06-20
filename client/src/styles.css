@@ -22,3 +22,83 @@
   width: 100%;
   max-width: 1200px; /* Exactly matches the header width */
 }
+
+
+.dashboard-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px 28px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.task-count-badge {
+  background-color: #e8eaf6;
+  color: #3949ab;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 3px 12px;
+  border-radius: 12px;
+}
+
+.page-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+}
+
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-filter {
+  width: 220px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  opacity: 0.4;
+  margin-bottom: 8px;
+}
+
+.empty-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.empty-subtitle {
+  font-size: 0.85rem;
+}

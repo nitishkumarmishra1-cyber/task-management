@@ -1,13 +1,18 @@
 export enum ROLE {
-    EMPLOYEE = 'employee',
+    USER = 'user',
     MANAGER = 'manager',
     TEAM_LEAD = 'team-lead'
 }
 
 export interface IUser {
     id : string;
-    username : string;
+    name : string;
     email : string;
     role : ROLE;
     reportTo : string;
+}
+
+export interface ILogin {
+    enail : string;
+    password : string;
 }

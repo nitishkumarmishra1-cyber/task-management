@@ -36,3 +36,10 @@ body {
   margin: 0;
   height: 100%;
 }
+
+:root {
+  @include mat.badge-overrides((
+    background-color: orange,
+    disabled-state-background-color: red,
+  ));
+}

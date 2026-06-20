@@ -16,6 +16,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatSortModule } from '@angular/material/sort';
 
 const MATERIAL_COMPONENTS = [
   MatTableModule,
@@ -33,7 +36,10 @@ const MATERIAL_COMPONENTS = [
   MatListModule,
   MatToolbarModule,
   MatCardModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatPaginatorModule,
+  MatBadgeModule,
+  MatSortModule
 ];
 
 @NgModule({

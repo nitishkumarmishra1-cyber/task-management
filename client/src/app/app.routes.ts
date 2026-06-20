@@ -13,15 +13,29 @@ export const routes: Routes = [
         loadChildren: () => import('./auth/auth.routes').then(m => m.AUTH_ROUTES)
     },
     {
-        path: 'task',
+        path: 'task-management',
         component: MainLayout,
-        canActivate : [authGuard],
-        canActivateChild : [authGuard],
+        canActivate: [authGuard],
+        canActivateChild: [authGuard],
         children: [
             {
+                path: 'task-list',
+                loadChildren: () => import('./features/task/task.routes').then(m => m.TASK_ROUTES)
+            },
+            {
+                path: 'user-list',
+                loadChildren: () => import('./features/user/user.routes').then(m => m.USER_ROUTES)
+            },
+            {
                 path: '',
-                loadChildren: () => import('./features/task.routes').then(m => m.TASK_ROUTES)
+                redirectTo: 'task-list',
+                pathMatch: 'full'
             }
         ]
+    },
+    {
+        path: '**',
+        redirectTo : '/task-management/task-list',
+        pathMatch : 'full'
     }
 ];
