@@ -11,7 +11,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withComponentInputBinding(),
-      withEnabledBlockingInitialNavigation(),
+      withEnabledBlockingInitialNavigation()
     ),
     provideHttpClient(
       withFetch(),

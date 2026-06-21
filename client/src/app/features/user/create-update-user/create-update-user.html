@@ -28,6 +28,7 @@
             }
         </mat-form-field>
 
+        @if (!isProfile()) {
         <div class="row">
             <div class="col-12 col-md-6">
                 <mat-form-field appearance="outline" class="w-100 mb-2">
@@ -51,6 +52,7 @@
                 </mat-form-field>
             </div>
         </div>
+        }
 
         @if (!isEditMode) {
         <mat-form-field appearance="outline" class="w-100 mb-2">

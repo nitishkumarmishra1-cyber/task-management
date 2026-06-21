@@ -1,20 +1,26 @@
 import { z } from 'zod';
+import { objectIdSchema } from '../../shared/utility/util.js';
+import { ROLE } from '../../shared/interfaces/user.js';
 
 export const CreateUserSchema = z.object({
     body: z.object({
         name: z.string().min(2, 'Name must be at least 2 characters'),
         email: z.email('Invalid email format'),
-        password: z.string().min(8, 'Password must be at least 8 characters')
+        role: z.enum(ROLE),
+        password: z.string().min(8, 'Password must be at least 8 characters'),
+        reportTo: z.string()
     }),
 });
 
 export const UpdateUserSchema = z.object({
     body: z.object({
         name: z.string().min(2).optional(),
-        email: z.email().optional()
+        email: z.email().optional(),
+        role: z.enum(ROLE).optional(),
+        reportTo: z.string().optional()
     }),
     params: z.object({
-        id: z.uuidv4('Invalid user ID'),
+        id: objectIdSchema,
     })
 });
 

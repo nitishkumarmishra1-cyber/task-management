@@ -10,6 +10,7 @@ export interface IUser {
     email : string;
     role : ROLE;
     reportTo : string;
+    accessToken : string;
 }
 
 export interface ILogin {

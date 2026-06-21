@@ -10,15 +10,16 @@
         </button>
     </div>
 
-    <p class="page-subtitle mb-3">Manage and track all tasks assigned to you.</p>
+    <p class="page-subtitle mb-3">Manage all users.</p>
 
     <div class="toolbar-row mb-3">
         <mat-form-field appearance="outline" class="status-filter">
-            <mat-label>Filter by Status</mat-label>
+            <mat-label>Filter by Role</mat-label>
             <mat-select [(value)]="selectedStatusFilter" (selectionChange)="onStatusFilterChange()">
                 <mat-option value="all">All</mat-option>
-                <mat-option value="pending">Pending</mat-option>
-                <mat-option value="completed">Completed</mat-option>
+                @for (item of ROLE_OPTIONS; track $index) {
+                <mat-option [value]="item.value">{{item.label}}</mat-option>
+                }
             </mat-select>
         </mat-form-field>
     </div>
@@ -28,10 +29,11 @@
     <div class="table-responsive">
         @if (users.length === 0) {
         <div class="empty-state text-center p-5">
-            <mat-icon class="empty-icon" color="disabled">assignment</mat-icon>
-            <p class="empty-title m-0">No tasks found</p>
+            <mat-icon color="disabled">account_circle</mat-icon>
+            <p class="empty-title m-0">No users found</p>
             <p class="empty-subtitle text-muted">
-                {{ selectedStatusFilter === 'all' ? 'No tasks assigned yet.' : 'No ' + selectedStatusFilter + ' tasks right now.' }}
+                {{ selectedStatusFilter === 'all' ? 'No users assigned yet.' : 'No ' + selectedStatusFilter + ' tasks
+                right now.' }}
             </p>
         </div>
         } @else {

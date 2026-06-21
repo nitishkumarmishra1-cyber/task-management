@@ -27,22 +27,25 @@ export class CreateUpdateUser implements OnInit {
   private user = inject(User);
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<CreateUpdateUser>);
-  public data : { user : IUser, assignableUsers : IUser[] } | any = inject<CreateUpdateUser>(MAT_DIALOG_DATA);
+  public data: { user: IUser, assignableUsers: IUser[] } | any = inject<CreateUpdateUser>(MAT_DIALOG_DATA);
   private alert = inject(AlertService);
 
   userForm!: FormGroup;
   isEditMode = false;
-  hidePassword = false;
-  ROLE_OPTIONS = Constant.ROLE_OPTIONS;
+  hidePassword = true;
+  ROLE_OPTIONS = Constant.ROLE_OPTION(this.auth.user?.role as ROLE);
   isSubmitting = signal(false);
+  isProfile = signal(false);
 
   ngOnInit(): void {
     this.isEditMode = !!this.data?.user;
+    this.isProfile.set(this.data?.user?.id === this.auth.user?.id);
+
     this.initForm();
 
     // team lead can only report to manager to other employees
-    this.userForm.get('role')?.valueChanges.subscribe((value : ROLE) => {
-      if(value === ROLE.TEAM_LEAD) {
+    this.userForm.get('role')?.valueChanges.subscribe((value: ROLE) => {
+      if (value === ROLE.TEAM_LEAD) {
         this.userForm.get('reportTo')?.setValue(this.auth.user?.id);
         this.userForm.get('reportTo')?.disable();
       } else {
@@ -59,18 +62,29 @@ export class CreateUpdateUser implements OnInit {
       ],
       email: [
         this.data?.user?.email || '',
-       [Validators.required, Validators.email]
+        [Validators.required, Validators.email]
       ],
       role: [
         this.data?.user?.role || ROLE.USER,
         [Validators.required, Validators.maxLength(500)]
       ],
       reportTo: [
-        this.data?.user?.reportTo || '',
+        { value : this.data?.user?.reportTo?.id || '', disabled : this.data?.user?.role === ROLE.TEAM_LEAD },
         [Validators.required]
       ],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
+
+    // remove validators from password we don't need when updating
+    if (this.isEditMode) {
+      this.userForm.get('password')?.clearValidators();
+    }
+
+    // we cannot update this because when user updating profile he should update these things
+    if (this.isProfile()) {
+      this.userForm.get('role')?.clearValidators();
+      this.userForm.get('reportTo')?.clearValidators();
+    }
   }
 
   get name() { return this.userForm.get('name'); }
@@ -79,17 +93,24 @@ export class CreateUpdateUser implements OnInit {
 
 
   onSubmit(): void {
-    if(this.userForm.invalid) {
+    if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
       return;
     }
 
     this.isSubmitting.set(true);
-    const payload = { ...this.userForm.value };
+    const payload = { ...this.userForm.getRawValue() };
 
     let $performAction = this.user.create(payload);
-    if(this.isEditMode) {
-      $performAction = this.user.update(this.data?.task?.id, payload)
+    if (this.isEditMode) {
+      if (this.isProfile()) {
+      this.userForm.get('role')?.clearValidators();
+      this.userForm.get('reportTo')?.clearValidators();
+    }
+
+
+      delete payload.password;
+      $performAction = this.user.update(this.data?.user?.id, payload)
     }
 
     $performAction.subscribe({

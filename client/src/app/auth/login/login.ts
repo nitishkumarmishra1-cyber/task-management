@@ -51,7 +51,7 @@ export class Login {
       next: (response: ApiResponse<IUser>) => {
         this.auth.update = response.data;
         this.alert.success(response.message);
-        this.router.navigateByUrl('/task-management/task-list');
+        this.router.navigateByUrl('/task-management/tasks/my');
       },
       error: (error: HttpErrorResponse) => {
         this.isSubmitting.set(false);

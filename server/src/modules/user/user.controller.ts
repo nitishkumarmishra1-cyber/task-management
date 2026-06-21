@@ -3,7 +3,7 @@ import UserService from "./user.service.js";
 import { sendSuccess } from "../../core/send-response.js";
 import { HTTP_STATUS, MESSAGES } from "../../core/message.js";
 import { AuthenticatedRequest } from "../../shared/interfaces/authenticated-request.js";
-import { ROLE } from "../../shared/interfaces/user.js";
+import { IUser, ROLE } from "../../shared/interfaces/user.js";
 
 export default class UserController {
     private service!: UserService;
@@ -27,6 +27,10 @@ export default class UserController {
         const id = request.user!.id as string;
         const role = request.user!.role as ROLE;
         const users = await this.service.userList(id, role);
+
+        console.log(role)
+        console.log(users)
+
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, users)
     }
 
@@ -38,5 +42,11 @@ export default class UserController {
     async getUserById(request: AuthenticatedRequest, response: Response): Promise<void> {
         const user = await this.service.getUserById(request.user?.id!)
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, user)
+    }
+
+    async update(request: AuthenticatedRequest, response: Response): Promise<void> {
+        const id = request.params!.id as string;
+        const user = await this.service.updateUser(id, request.body, request.user as IUser)
+        sendSuccess(response, HTTP_STATUS.OK, MESSAGES.USER.UPDATED, user)
     }
 }

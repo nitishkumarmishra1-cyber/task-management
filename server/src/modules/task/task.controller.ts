@@ -3,6 +3,7 @@ import TaskService from "./task.service.js";
 import { sendSuccess } from "../../core/send-response.js";
 import { HTTP_STATUS, MESSAGES } from "../../core/message.js";
 import { AuthenticatedRequest } from "../../shared/interfaces/authenticated-request.js";
+import { IUser } from "../../shared/interfaces/user.js";
 
 export default class TaskController {
     private service!: TaskService;
@@ -11,8 +12,8 @@ export default class TaskController {
         this.service = service;
     }
 
-    async create(request: Request, response: Response): Promise<void> {
-        const task = await this.service.createTask(request.body)
+    async create(request: AuthenticatedRequest, response: Response): Promise<void> {
+        const task = await this.service.createTask(request.body, request!.user as IUser)
         sendSuccess(response, HTTP_STATUS.CREATED, MESSAGES.TASK.CREATED)
     }
 
@@ -22,13 +23,14 @@ export default class TaskController {
     }
 
     async getAllTasks(request: AuthenticatedRequest, response: Response): Promise<void> {
-        const user = await this.service.getAllTasks()
+        const type = request.params.type as 'team' | 'all';
+        const user = await this.service.getAllTasks(type, request!.user as IUser)
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, user)
     }
 
-    async update(request: Request, response: Response): Promise<void> {
+    async update(request: AuthenticatedRequest, response: Response): Promise<void> {
         const id = request.params.id as string;
-        const task = await this.service.updateTask(id, request.body);
+        const task = await this.service.updateTask(id, request.body, request!.user as IUser);
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.TASK.UPDATED, task);
     }
 

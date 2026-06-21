@@ -37,7 +37,7 @@ const userSchema = new Schema({
     },
     reportTo: {
         type: Types.ObjectId,
-        ref: 'user'
+        ref: 'User'
     },
     isActive: {
         type: Boolean,
@@ -51,6 +51,13 @@ const userSchema = new Schema({
 
 userSchema.virtual('id').get(function () {
     return this._id.toHexString();
+});
+
+userSchema.virtual('reportToName').get(function () {
+    if (this.reportTo && typeof this.reportTo === 'object' && 'name' in this.reportTo) {
+        return (this.reportTo as any).name;
+    }
+    return null;
 });
 
 userSchema.set('toJSON', {

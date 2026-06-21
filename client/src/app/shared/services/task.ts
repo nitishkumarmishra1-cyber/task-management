@@ -18,8 +18,8 @@ export class Task {
     return this.api.patch<ApiResponse<ITask>>(`${Constant.UPDATE_TASK}${id}`, data)
   }
 
-  public taskList() : Observable<ApiResponse<ITask[]>> {
-    return this.api.get<ApiResponse<ITask[]>>(`${Constant.GET_TASK}`)
+  public taskList(taskType : string) : Observable<ApiResponse<ITask[]>> {
+    return this.api.get<ApiResponse<ITask[]>>(`${Constant.GET_TASK}${taskType === 'my' ? '' : `/${taskType}`}`)
   }
 
   public allTasks() : Observable<ApiResponse<ITask[]>> {

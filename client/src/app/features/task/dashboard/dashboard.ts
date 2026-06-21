@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUpdateTask } from '../create-update-task/create-update-task';
-import { ApiResponse, ITask, IUser, ROLE, STATUS } from '@app/shared/interfaces';
+import { ApiResponse, ITask, IUser, ROLE } from '@app/shared/interfaces';
 import { MaterialModule } from '@app/shared/modules/material-module';
 import { List } from '@app/shared/components/list/list';
 import { ListAction, ListColumn } from '@app/shared/interfaces/table';
@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '@app/shared/services/snackbar';
 import { Constant } from '@app/utility/constant';
 import { User } from '@app/shared/services/user';
+import { toCapitalCase } from '@app/utility/util';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,32 +29,38 @@ export class Dashboard {
   public selectedStatusFilter: 'all' | 'pending' | 'completed' = 'all';
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
+  @Input() taskType : 'my' | 'team' | 'all' = 'my'; 
 
   // meta info
   public tasks: ITask[] = [];
   private users: IUser[] = [];
+  public pageTitle : string = '';
   
   public STATUS_OPTIONS = Constant.STATUS_OPTIONS;
   public options: ListAction[] = [
     { id: '1', name: 'edit', listener: (task: ITask) => this.openTaskDialog(task) },
+    { id: '3', name: 'check_circle', listener: (task: ITask) => this.openTaskDialog(task) },
     { id: '2', name: 'deleted', listener: (id: string) => this.deleteTask(id) }
   ];
 
   public columns: ListColumn[] = [
     { key: 'title', label: 'Title', sortable: true, type: 'text', truncateLength: 0 },
-    { key: 'description', label: 'Description', sortable: false, type: 'truncate', truncateLength: 15 },
+    { key: 'description', label: 'Description', sortable: false, type: 'truncate', truncateLength: 30 },
     { key: 'status', label: 'Status', sortable: false, type: 'status-badge', truncateLength: 0 },
     { key: 'assignToName', label: 'Assignee', sortable: false, type: 'text', truncateLength: 0 }
   ];
 
-  ngOnInit() { 
-    // load tasks
-    this.refresh();
+  ngOnInit() {
     this.userList();
   }
 
+  ngOnChanges() {
+    this.pageTitle = toCapitalCase(this.taskType);
+    this.refresh();
+  }
+
   refresh() {
-    this.task.taskList().subscribe({
+    this.task.taskList(this.taskType).subscribe({
       next: (response: ApiResponse<ITask[]>) => {
         this.tasks = [...response.data];
         this.cdr.markForCheck()
@@ -65,6 +72,9 @@ export class Dashboard {
   }
 
   userList() {
+    // user cannot access this API so this check will not call any API
+    if(this.auth.user?.role === ROLE.USER) return;
+
     this.user.assignableUsers().subscribe({
       next: (response: ApiResponse<IUser[]>) => {
         this.users = response.data;

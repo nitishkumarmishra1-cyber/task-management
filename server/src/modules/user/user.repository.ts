@@ -20,7 +20,7 @@ export class UserRepository {
     }
 
     async findAll(userId : string) {
-        return User.find({ _id : { $ne : toObjectId(userId) } });
+        return User.find({ _id : { $ne : toObjectId(userId) } }).populate('reportTo', 'name');
     }
 
     async findAssignableUsers(userId : string) {
@@ -28,11 +28,11 @@ export class UserRepository {
     }
 
     async findReportees(userId : string) {
-        return User.find({ reportTo : toObjectId(userId) })
+        return User.find({ reportTo : toObjectId(userId) }).populate('reportTo', 'name');
     }
 
     async updateById(id: string, data: UpdateUserDto) {
-        return User.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        return User.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
     }
 
     async deleteById(id: string) {

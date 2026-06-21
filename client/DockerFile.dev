@@ -1,0 +1,8 @@
+FROM node:20-slim
+WORKDIR /app/client
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
+COPY . .
+EXPOSE 4200
+CMD ["pnpm", "start", "--host", "0.0.0.0", "--poll", "2000"]

@@ -14,7 +14,7 @@ const controller = new TaskController(service);
 taskRoutes.post('', validate(CreateTaskSchema), asyncHandler(controller.create.bind(controller)));
 taskRoutes.patch('/:id', validate(UpdateTaskSchema), asyncHandler(controller.update.bind(controller)));
 taskRoutes.get('', asyncHandler(controller.getUserTasks.bind(controller)));
-taskRoutes.get('/all', authorize(ROLE.MANAGER), asyncHandler(controller.getAllTasks.bind(controller)));
+taskRoutes.get('/:type', authorize(ROLE.MANAGER, ROLE.TEAM_LEAD), asyncHandler(controller.getAllTasks.bind(controller)));
 taskRoutes.delete('/:id', asyncHandler(controller.delete.bind(controller)));
 
 export default taskRoutes;

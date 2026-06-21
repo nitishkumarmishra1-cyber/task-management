@@ -24,5 +24,9 @@ userRoutes.get(
     authorize(ROLE.MANAGER, ROLE.TEAM_LEAD),
     asyncHandler(controller.userList.bind(controller))
 );
+userRoutes.patch(
+    '/:id',
+    asyncHandler(controller.update.bind(controller))
+);
 
 export default userRoutes;

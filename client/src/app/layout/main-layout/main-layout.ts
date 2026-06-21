@@ -21,10 +21,11 @@ export class MainLayout {
 
   private buildMenuForRole(role: ROLE = ROLE.USER): SidebarMenuItem[] {
     const items: SidebarMenuItem[] = [
-      { label: 'Task List', icon: 'checklist', route: '/task-management/task-list' }
+      { label: 'My Tasks', icon: 'checklist', route: '/task-management/tasks/my' }
     ];
 
     if (role === ROLE.MANAGER || role === ROLE.TEAM_LEAD) {
+      items.push({ label: 'Team Tasks', icon: 'assignment_ind', route: `/task-management/tasks/${role === ROLE.MANAGER ? 'all' : 'team'}` })
       items.push({ label: 'Users', icon: 'group', route: '/task-management/user-list' });
     }
 

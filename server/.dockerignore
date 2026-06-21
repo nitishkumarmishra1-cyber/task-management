@@ -1,0 +1,12 @@
+ode_modules
+dist
+.git
+.gitignore
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+.env.*
+*.env.local
+.DS_Store
+npm-debug.log
+README.md

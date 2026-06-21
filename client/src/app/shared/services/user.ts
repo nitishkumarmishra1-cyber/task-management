@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Api } from './api';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { ApiResponse, IUser } from '../interfaces';
 import { Constant } from '../../utility/constant';
 
@@ -31,6 +31,6 @@ export class User {
   }
 
   public assignableUsers(): Observable<ApiResponse<IUser[]>> {
-    return this.api.get<ApiResponse<IUser[]>>(`${Constant.ASSIGNABLE_USER}`)
+    return this.api.get<ApiResponse<IUser[]>>(`${Constant.ASSIGNABLE_USER}`).pipe(shareReplay(1))
   }
 }

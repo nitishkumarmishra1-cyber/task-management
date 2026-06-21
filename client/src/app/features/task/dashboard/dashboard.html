@@ -2,7 +2,7 @@
 
     <div class="card-header mb-4">
         <div class="title-block">
-            <h1 class="page-title m-0">Tasks</h1>
+            <h1 class="page-title m-0">{{pageTitle}} Tasks</h1>
             <span class="task-count-badge">{{ tasks.length }} {{ tasks.length === 1 ? 'task' : 'tasks' }}</span>
         </div>
         <button mat-raised-button color="primary" class="add-btn" (click)="openTaskDialog()">

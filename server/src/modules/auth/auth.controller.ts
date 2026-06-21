@@ -11,7 +11,7 @@ export class AuthController {
         this.authService = authService;
     }
 
-    async userLogin(request: Request, response: Response, next: NextFunction): Promise<void> {
+    async userLogin(request: Request, response: Response): Promise<void> {
         const { token, user } = await this.authService.authentication(request.body);
 
         response.cookie('accessToken', token, {
@@ -25,7 +25,7 @@ export class AuthController {
             response,
             HTTP_STATUS.OK,
             MESSAGES.AUTH.LOGIN_SUCCESS,
-            user
+            { accessToken : token, ...user }
         );
     }
 
