@@ -1,30 +1,34 @@
-import express, { Request, Response } from 'express';
-import { errorHandler } from './middleware/error.middleware.js';
-import router from './routes/index.js';
-import { corsConfig } from './core/setting.js';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { AppError } from './core/app.error.js';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+
+import router from './routes/index.js';
+import { errorHandler } from './middleware/error.middleware.js';
+import { corsConfig } from './core/setting.js';
+import { AppError } from './core/app.error.js';
 
 const app = express();
 
-// middlewares
-app.use(helmet())
-app.use(cors(corsConfig))
+app.use(helmet());
+app.use(cors(corsConfig));
 app.use(express.json());
 app.use(cookieParser());
 
-// routes
-app.get('/', (request: Request, response: Response) => {
-    response.json({ message: 'Hello from Express with TypeScript!' });
+app.use('/api', router);
+
+const clientPath = path.resolve('client'); 
+app.use(express.static(clientPath));
+
+app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(clientPath, 'index.html'));
 });
-app.use('/api', router)
-app.use((req, res, next) => {
+
+app.use((req: Request, res: Response, next: NextFunction) => {
     next(new AppError(`Route ${req.originalUrl} not found`, 404));
 });
 
-// error middleware
-app.use(errorHandler)
+app.use(errorHandler);
 
 export default app;
