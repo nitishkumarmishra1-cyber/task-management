@@ -3,8 +3,8 @@ import {
 } from "./chunk-PS6XOAYV.js";
 import {
   CreateUpdateUser
-} from "./chunk-37DLKY2Q.js";
-import "./chunk-MKU7DKMS.js";
+} from "./chunk-3I7GH5YD.js";
+import "./chunk-EPAIUKAM.js";
 import {
   MatBadge,
   MatBadgeModule,
@@ -27,7 +27,7 @@ import {
   MatToolbar,
   MatToolbarModule,
   MaterialModule
-} from "./chunk-GIXJQKS3.js";
+} from "./chunk-7EGRQU55.js";
 import {
   Api,
   Auth,
@@ -73,7 +73,7 @@ import {
   ɵɵrepeaterTrackByIndex,
   ɵɵtext,
   ɵɵtextInterpolate
-} from "./chunk-RUAKYB3P.js";
+} from "./chunk-WL3QX2OF.js";
 import "./chunk-GOMI4DH3.js";
 
 // src/app/shared/services/notification.ts
@@ -303,7 +303,7 @@ var routes = [
   },
   {
     path: "auth",
-    loadChildren: () => import("./chunk-IJWOB2EP.js").then((m) => m.AUTH_ROUTES)
+    loadChildren: () => import("./chunk-FZFE6FYD.js").then((m) => m.AUTH_ROUTES)
   },
   {
     path: "task-management",
@@ -313,11 +313,11 @@ var routes = [
     children: [
       {
         path: "tasks",
-        loadChildren: () => import("./chunk-6MALDC7J.js").then((m) => m.TASK_ROUTES)
+        loadChildren: () => import("./chunk-SDF7XIV4.js").then((m) => m.TASK_ROUTES)
       },
       {
         path: "user-list",
-        loadChildren: () => import("./chunk-IFNRMMIJ.js").then((m) => m.USER_ROUTES)
+        loadChildren: () => import("./chunk-AX4WVPQG.js").then((m) => m.USER_ROUTES)
       },
       {
         path: "",

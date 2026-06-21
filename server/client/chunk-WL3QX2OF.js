@@ -47772,14 +47772,13 @@ var AlertService = class _AlertService {
 
 // src/environments/environment.ts
 var environment = {
-  BASE_URL: "http://localhost:3000/api/"
+  BASE_URL: "https://task-management-dd53.onrender.com/api/"
 };
 
 // src/app/shared/services/api.ts
 var Api = class _Api {
   httpClient = inject2(HttpClient);
   post(url, data) {
-    console.log(environment);
     return this.httpClient.post(`${environment.BASE_URL}${url}`, data, { withCredentials: true });
   }
   get(url) {
@@ -48134,4 +48133,4 @@ export {
   AlertService,
   Auth
 };
-//# sourceMappingURL=chunk-RUAKYB3P.js.map
+//# sourceMappingURL=chunk-WL3QX2OF.js.map

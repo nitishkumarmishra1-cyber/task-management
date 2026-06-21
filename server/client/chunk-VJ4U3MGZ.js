@@ -2,7 +2,7 @@ import {
   Auth,
   Router,
   inject
-} from "./chunk-RUAKYB3P.js";
+} from "./chunk-WL3QX2OF.js";
 
 // src/app/shared/guard/permission-guard.ts
 var Authorize = (...roles) => {
@@ -24,4 +24,4 @@ var Authorize = (...roles) => {
 export {
   Authorize
 };
-//# sourceMappingURL=chunk-IX2MW76S.js.map
+//# sourceMappingURL=chunk-VJ4U3MGZ.js.map

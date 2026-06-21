@@ -4,7 +4,7 @@ import "./chunk-GOMI4DH3.js";
 var AUTH_ROUTES = [
   {
     path: "login",
-    loadComponent: () => import("./chunk-QNXA5M36.js").then((m) => m.Login)
+    loadComponent: () => import("./chunk-4TFHBO7V.js").then((m) => m.Login)
   },
   {
     path: "",
@@ -19,4 +19,4 @@ var AUTH_ROUTES = [
 export {
   AUTH_ROUTES
 };
-//# sourceMappingURL=chunk-IJWOB2EP.js.map
+//# sourceMappingURL=chunk-FZFE6FYD.js.map

@@ -15,7 +15,7 @@ import {
   MatTable,
   MatTableDataSource,
   MaterialModule
-} from "./chunk-GIXJQKS3.js";
+} from "./chunk-7EGRQU55.js";
 import {
   CommonModule,
   Component,
@@ -50,7 +50,7 @@ import {
   ɵɵtextInterpolate,
   ɵɵtextInterpolate1,
   ɵɵviewQuery
-} from "./chunk-RUAKYB3P.js";
+} from "./chunk-WL3QX2OF.js";
 
 // src/app/shared/components/badge/badge.ts
 var Badge = class _Badge {
@@ -355,4 +355,4 @@ var List = class _List {
 export {
   List
 };
-//# sourceMappingURL=chunk-SSPVBAD4.js.map
+//# sourceMappingURL=chunk-535DSSQP.js.map

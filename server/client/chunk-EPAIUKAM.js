@@ -6,7 +6,7 @@ import {
   setClassMetadata,
   shareReplay,
   ɵɵdefineInjectable
-} from "./chunk-RUAKYB3P.js";
+} from "./chunk-WL3QX2OF.js";
 
 // src/app/shared/services/user.ts
 var User = class _User {
@@ -46,4 +46,4 @@ var User = class _User {
 export {
   User
 };
-//# sourceMappingURL=chunk-MKU7DKMS.js.map
+//# sourceMappingURL=chunk-EPAIUKAM.js.map

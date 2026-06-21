@@ -1,28 +1,28 @@
 import {
   Authorize
-} from "./chunk-IX2MW76S.js";
+} from "./chunk-VJ4U3MGZ.js";
 import {
   ROLE
-} from "./chunk-RUAKYB3P.js";
+} from "./chunk-WL3QX2OF.js";
 import "./chunk-GOMI4DH3.js";
 
 // src/app/features/task/task.routes.ts
 var TASK_ROUTES = [
   {
     path: "my",
-    loadComponent: () => import("./chunk-ZNXM2IRR.js").then((m) => m.Dashboard),
+    loadComponent: () => import("./chunk-3WUSDL5N.js").then((m) => m.Dashboard),
     data: { taskType: "my" }
   },
   {
     path: "team",
     canActivate: [Authorize(ROLE.TEAM_LEAD, ROLE.MANAGER)],
-    loadComponent: () => import("./chunk-ZNXM2IRR.js").then((m) => m.Dashboard),
+    loadComponent: () => import("./chunk-3WUSDL5N.js").then((m) => m.Dashboard),
     data: { taskType: "team" }
   },
   {
     path: "all",
     canActivate: [Authorize(ROLE.MANAGER)],
-    loadComponent: () => import("./chunk-ZNXM2IRR.js").then((m) => m.Dashboard),
+    loadComponent: () => import("./chunk-3WUSDL5N.js").then((m) => m.Dashboard),
     data: { taskType: "all" }
   },
   {
@@ -34,4 +34,4 @@ var TASK_ROUTES = [
 export {
   TASK_ROUTES
 };
-//# sourceMappingURL=chunk-6MALDC7J.js.map
+//# sourceMappingURL=chunk-SDF7XIV4.js.map
