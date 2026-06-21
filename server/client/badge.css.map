@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/shared/components/badge/badge.css"],
+  "sourcesContent": [".status-badge {\n    display: inline-block;\n    padding: 2px 12px;\n    border-radius: 12px;\n    font-size: 0.75rem;\n    font-weight: 500;\n    text-transform: capitalize;\n    line-height: 1.6;\n}\n\n.badge-pending {\n    background-color: #fff3cd;\n    color: #856404;\n}\n\n.badge-completed {\n    background-color: #d4edda;\n    color: #155724;\n}"],
+  "mappings": ";AAAA,CAAC;AACG,WAAS;AACT,WAAS,IAAI;AACb,iBAAe;AACf,aAAW;AACX,eAAa;AACb,kBAAgB;AAChB,eAAa;AACjB;AAEA,CAAC;AACG,oBAAkB;AAClB,SAAO;AACX;AAEA,CAAC;AACG,oBAAkB;AAClB,SAAO;AACX;",
+  "names": []
+}

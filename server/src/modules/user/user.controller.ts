@@ -27,10 +27,6 @@ export default class UserController {
         const id = request.user!.id as string;
         const role = request.user!.role as ROLE;
         const users = await this.service.userList(id, role);
-
-        console.log(role)
-        console.log(users)
-
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, users)
     }
 

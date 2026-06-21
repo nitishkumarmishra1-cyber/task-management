@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/shared/guard/permission-guard.ts"],
+  "sourcesContent": ["import { CanActivateFn, Router } from '@angular/router';\nimport { ROLE } from '../interfaces';\nimport { Auth } from '../services/auth';\nimport { inject } from '@angular/core';\n\nexport const Authorize = (...roles: ROLE[]): CanActivateFn => {\n  return (route, state) => {\n    const auth = inject(Auth);\n    const router = inject(Router);\n\n    // checking session\n    const isAuthenticated = auth.checkSession();\n\n    if (!isAuthenticated) {\n      return router.parseUrl('/auth/login');\n    }\n\n    const requestRole = auth.user?.role;\n\n    if (!requestRole || !roles.includes(requestRole)) {\n      return router.parseUrl('/task-management/task-list');\n    }\n\n    return true\n  }\n}\n"],
+  "mappings": ";;;;;;;AAKO,IAAM,YAAY,IAAI,UAAgC;AAC3D,SAAO,CAAC,OAAO,UAAS;AACtB,UAAM,OAAO,OAAO,IAAI;AACxB,UAAM,SAAS,OAAO,MAAM;AAG5B,UAAM,kBAAkB,KAAK,aAAY;AAEzC,QAAI,CAAC,iBAAiB;AACpB,aAAO,OAAO,SAAS,aAAa;IACtC;AAEA,UAAM,cAAc,KAAK,MAAM;AAE/B,QAAI,CAAC,eAAe,CAAC,MAAM,SAAS,WAAW,GAAG;AAChD,aAAO,OAAO,SAAS,4BAA4B;IACrD;AAEA,WAAO;EACT;AACF;",
+  "names": []
+}

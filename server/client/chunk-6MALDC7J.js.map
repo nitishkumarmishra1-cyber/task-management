@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/task/task.routes.ts"],
+  "sourcesContent": ["import { Routes } from '@angular/router';\nimport { Authorize } from '@app/shared/guard/permission-guard';\nimport { ROLE } from '@app/shared/interfaces';\n\nexport const TASK_ROUTES: Routes = [\n    {\n        path: 'my',\n        loadComponent : () => import('./dashboard/dashboard').then(m => m.Dashboard),\n        data : { taskType : 'my' }\n    },\n    {\n        path: 'team',\n        canActivate : [Authorize(ROLE.TEAM_LEAD, ROLE.MANAGER)],\n        loadComponent : () => import('./dashboard/dashboard').then(m => m.Dashboard),\n        data : { taskType : 'team' }\n    },\n    {\n        path: 'all',\n        canActivate : [Authorize(ROLE.MANAGER)],\n        loadComponent : () => import('./dashboard/dashboard').then(m => m.Dashboard),\n        data : { taskType : 'all' }\n    },\n    {\n        path: '',\n        redirectTo: 'my',\n        pathMatch: 'full'\n    }\n];"],
+  "mappings": ";;;;;;;;;AAIO,IAAM,cAAsB;EAC/B;IACI,MAAM;IACN,eAAgB,MAAM,OAAO,qBAAuB,EAAE,KAAK,OAAK,EAAE,SAAS;IAC3E,MAAO,EAAE,UAAW,KAAI;;EAE5B;IACI,MAAM;IACN,aAAc,CAAC,UAAU,KAAK,WAAW,KAAK,OAAO,CAAC;IACtD,eAAgB,MAAM,OAAO,qBAAuB,EAAE,KAAK,OAAK,EAAE,SAAS;IAC3E,MAAO,EAAE,UAAW,OAAM;;EAE9B;IACI,MAAM;IACN,aAAc,CAAC,UAAU,KAAK,OAAO,CAAC;IACtC,eAAgB,MAAM,OAAO,qBAAuB,EAAE,KAAK,OAAK,EAAE,SAAS;IAC3E,MAAO,EAAE,UAAW,MAAK;;EAE7B;IACI,MAAM;IACN,YAAY;IACZ,WAAW;;;",
+  "names": []
+}

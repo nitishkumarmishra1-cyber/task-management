@@ -10,7 +10,6 @@ export class Api {
   private httpClient : HttpClient = inject(HttpClient)
 
   public post<T>(url : string, data : any) : Observable<T> {
-    console.log(environment)
     return this.httpClient.post<T>(`${environment.BASE_URL}${url}`, data, { withCredentials : true });
   }
 

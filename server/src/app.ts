@@ -21,7 +21,7 @@ app.use('/api', router);
 const clientPath = path.resolve('client'); 
 app.use(express.static(clientPath));
 
-app.get('*', (req: Request, res: Response) => {
+app.get('/*splat', (req: Request, res: Response) => {
     res.sendFile(path.join(clientPath, 'index.html'));
 });
 

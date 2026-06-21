@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/user/user.routes.ts"],
+  "sourcesContent": ["import { Routes } from '@angular/router';\nimport { Authorize } from '@app/shared/guard/permission-guard';\nimport { ROLE } from '@app/shared/interfaces';\n\nexport const USER_ROUTES: Routes = [\n    {\n        path : '',\n        canActivate : [Authorize(ROLE.MANAGER, ROLE.TEAM_LEAD)],\n        loadComponent : () => import('./list/list').then(m => m.UserList)\n    }\n];"],
+  "mappings": ";;;;;;;;;AAIO,IAAM,cAAsB;EAC/B;IACI,MAAO;IACP,aAAc,CAAC,UAAU,KAAK,SAAS,KAAK,SAAS,CAAC;IACtD,eAAgB,MAAM,OAAO,qBAAa,EAAE,KAAK,OAAK,EAAE,QAAQ;;;",
+  "names": []
+}
