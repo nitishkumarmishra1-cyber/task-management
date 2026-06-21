@@ -18,6 +18,10 @@ app.use(cookieParser());
 
 app.use('/api', router);
 
+app.get('/health', (req: Request, res: Response) => {
+    res.status(200).json({ message: 'Server is healthy!' });
+})
+
 const clientPath = path.resolve('client'); 
 app.use(express.static(clientPath));
 
