@@ -31,6 +31,7 @@ export const MESSAGES = {
         CREATED: 'Task created successfully',
         UPDATED: 'Task updated successfully',
         DELETED: 'Task deleted successfully',
+        UPDATE_STATUS: 'Task completed successfully'
     },
     VALIDATION: {
         FAILED: 'Validation failed.',

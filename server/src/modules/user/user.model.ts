@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 const { connection, model, Schema, Types } = mongoose;
 import { ROLE } from "../../shared/interfaces/user.js";
+import { AppConstant } from "../../shared/utility/constant.js";
 
 const userSchema = new Schema({
     name: {
@@ -17,7 +18,7 @@ const userSchema = new Schema({
         trim: true,
         lowercase: true,
         match: [
-            /^[\w.-]+@[\w.-]+\.\w+$/,
+            AppConstant.EMAIL_PATTERN,
             'Please enter a valid email address'
         ],
     },

@@ -4,6 +4,7 @@ import { sendSuccess } from "../../core/send-response.js";
 import { HTTP_STATUS, MESSAGES } from "../../core/message.js";
 import { AuthenticatedRequest } from "../../shared/interfaces/authenticated-request.js";
 import { IUser } from "../../shared/interfaces/user.js";
+import { FILTER } from "../../shared/interfaces/task.js";
 
 export default class TaskController {
     private service!: TaskService;
@@ -18,13 +19,13 @@ export default class TaskController {
     }
 
     async getUserTasks(request: AuthenticatedRequest, response: Response): Promise<void> {
-        const tasks = await this.service.getUserTasks(request.user?.id!)
+        const tasks = await this.service.getUserTasks(request.user?.id!, request.query!.filter as FILTER)
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, tasks)
     }
 
     async getAllTasks(request: AuthenticatedRequest, response: Response): Promise<void> {
-        const type = request.params.type as 'team' | 'all';
-        const user = await this.service.getAllTasks(type, request!.user as IUser)
+        const type = request.params.type as FILTER;
+        const user = await this.service.getAllTasks(type, request!.user as IUser, request.query!.filter as FILTER)
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, user)
     }
 
@@ -37,6 +38,12 @@ export default class TaskController {
     async delete(request: Request, response: Response): Promise<void> {
         const id = request.params.id as string;
         const task = await this.service.deleteTask(id);
-        sendSuccess(response, HTTP_STATUS.CREATED, MESSAGES.TASK.DELETED);
+        sendSuccess(response, HTTP_STATUS.OK, MESSAGES.TASK.DELETED);
+    }
+
+    async markTaskComplete(request: Request, response: Response): Promise<void> {
+        const id = request.params.id as string;
+        const task = await this.service.markTaskComplete(id);
+        sendSuccess(response, HTTP_STATUS.OK, MESSAGES.TASK.UPDATE_STATUS);
     }
 }

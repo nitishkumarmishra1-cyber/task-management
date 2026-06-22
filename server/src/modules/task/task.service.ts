@@ -5,6 +5,7 @@ import { HTTP_STATUS, MESSAGES } from '../../core/message.js';
 import { IUser, ROLE } from '../../shared/interfaces/user.js';
 import notificationRepository from '../notification/notification.repository.js';
 import { INotification } from '../../shared/interfaces/notification.js';
+import { FILTER } from '../../shared/interfaces/task.js';
 
 export default class TaskService {
     async createTask(data: CreateTaskDto, auth_User: IUser) {
@@ -29,25 +30,25 @@ export default class TaskService {
         return task;
     }
 
-    async getUserTasks(userId: string) {
-        return taskRepository.userTasks(userId);
+    async getUserTasks(userId: string, filter : FILTER) {
+        return taskRepository.userTasks(userId, filter);
     }
 
-    async getAllTasks(type: 'team' | 'all', user: IUser) {
+    async getAllTasks(type: FILTER, user: IUser, filter : FILTER = FILTER.ALL) {
         // All task only can see by manager only
-        if (type === 'all' && user.role !== ROLE.MANAGER) {
+        if (type === FILTER.ALL && user.role !== ROLE.MANAGER) {
             throw new AppError(MESSAGES.GENERIC.FORBIDDEN, HTTP_STATUS.FORBIDDEN)
         }
 
         // for viewing team task user should either team-lead or manager
-        if (type === 'team' && user.role === ROLE.USER) {
+        if (type === FILTER.TEAM && user.role === ROLE.USER) {
             throw new AppError(MESSAGES.GENERIC.FORBIDDEN, HTTP_STATUS.FORBIDDEN)
         }
 
-        if (type === 'all') {
-            return taskRepository.findAll();
+        if (type === FILTER.ALL) {
+            return taskRepository.findAll(filter);
         } else {
-            return taskRepository.teamTasks(user.id);
+            return taskRepository.teamTasks(user.id, filter);
         }
     }
 
@@ -87,6 +88,14 @@ export default class TaskService {
 
     async deleteTask(id: string) {
         const task = await taskRepository.deleteById(id);
+        if (!task) {
+            throw new AppError(MESSAGES.TASK.NOT_FOUND, HTTP_STATUS.NOT_FOUND);
+        }
+        return task;
+    }
+
+    async markTaskComplete(id: string) {
+        const task = await taskRepository.updateStatusById(id);
         if (!task) {
             throw new AppError(MESSAGES.TASK.NOT_FOUND, HTTP_STATUS.NOT_FOUND);
         }

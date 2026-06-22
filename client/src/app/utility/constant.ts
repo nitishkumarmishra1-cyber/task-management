@@ -1,6 +1,10 @@
 import { ROLE, STATUS } from "../shared/interfaces";
 
 export class Constant {
+    // validation patterns
+    public static readonly EMAIL_PATTERN = /^[\w.-]+@[\w.-]+\.\w+$/;
+    public static readonly PASSSWORD_PATTERN = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
     // auth api endpoints
     public static readonly LOGIN = 'auth/login';
     public static readonly LOGOUT = 'auth/logout';
@@ -19,6 +23,7 @@ export class Constant {
     public static readonly UPDATE_TASK = 'task/';
     public static readonly GET_TASK = 'task';
     public static readonly DELETE_TASK = 'task/';
+    public static readonly UPDATE_TASK_STATUS = 'task/status/';
     public static readonly ALL_TASK = 'task/all';
 
     // notificatio api end-points

@@ -3,23 +3,22 @@
 
         @for (col of columns; track col.key) {
         <ng-container [matColumnDef]="col.key">
-            <th mat-header-cell *matHeaderCellDef
-                [mat-sort-header]="col.sortable === false ? '' : col.key"
+            <th mat-header-cell *matHeaderCellDef [mat-sort-header]="col.sortable === false ? '' : col.key"
                 [disabled]="col.sortable === false">
                 {{ col.label }}
             </th>
 
             <td mat-cell *matCellDef="let row">
                 @switch (col.type) {
-                    @case ('status-badge') {
-                        <app-status-badge [status]="row[col.key]"></app-status-badge>
-                    }
-                    @case ('truncate') {
-                        <span class="text-truncate-cell">{{ truncate(row[col.key], col.truncateLength || 40) }}</span>
-                    }
-                    @default {
-                        <span>{{ row[col.key] }}</span>
-                    }
+                @case ('status-badge') {
+                <app-status-badge [status]="row[col.key]"></app-status-badge>
+                }
+                @case ('truncate') {
+                <span class="text-truncate-cell">{{ truncate(row[col.key], col.truncateLength || 40) }}</span>
+                }
+                @default {
+                <span>{{ row[col.key] }}</span>
+                }
                 }
             </td>
         </ng-container>
@@ -31,9 +30,11 @@
             <th mat-header-cell *matHeaderCellDef class="text-end"> Actions </th>
             <td mat-cell *matCellDef="let row" class="text-end">
                 @for (option of options; track option.id) {
+                @if (showOption(row, option)) {
                 <button mat-icon-button color="accent" (click)="option.listener(row)">
                     <mat-icon>{{ option.name }}</mat-icon>
                 </button>
+                }
                 }
             </td>
         </ng-container>

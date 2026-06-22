@@ -45,4 +45,11 @@ export class List implements OnChanges, AfterViewInit {
     if (!value) return '';
     return value.length > length ? value.slice(0, length) + '...' : value;
   }
+
+  showOption(element : any, option : ListAction) : boolean {
+    if('condition' in option && option.condition?.key && option.condition?.value) {
+      return element[option.condition?.key] === option.condition?.value
+    }
+    return true
+  }
 }

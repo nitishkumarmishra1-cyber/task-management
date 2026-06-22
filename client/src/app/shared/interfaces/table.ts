@@ -10,4 +10,8 @@ export interface ListAction {
   id: string;
   name: string;
   listener: (row: any) => void;
+  condition? : {
+    key : string;
+    value : string | boolean;
+  }
 }

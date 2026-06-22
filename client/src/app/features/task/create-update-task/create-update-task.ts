@@ -44,7 +44,7 @@ export class CreateUpdateTask implements OnInit {
     this.taskForm = this.fb.group({
       title: [
         this.data?.task?.title || '',
-        [Validators.required, Validators.minLength(3)]
+        [Validators.required, Validators.minLength(10), Validators.minLength(100)]
       ],
       description: [
         this.data?.task?.description || '',
@@ -81,7 +81,7 @@ export class CreateUpdateTask implements OnInit {
     $performAction.subscribe({
       next: (response: ApiResponse<ITask>) => {
         this.alert.success(response.message);
-        this.dialogRef.close(response.data)
+        this.dialogRef.close(true);
       },
       error: (error: HttpErrorResponse) => {
         this.isSubmitting.set(false);

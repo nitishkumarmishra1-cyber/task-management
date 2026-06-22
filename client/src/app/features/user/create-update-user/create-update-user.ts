@@ -58,21 +58,21 @@ export class CreateUpdateUser implements OnInit {
     this.userForm = this.fb.group({
       name: [
         this.data?.user?.name || '',
-        [Validators.required, Validators.minLength(3)]
+        [Validators.required, Validators.minLength(2), Validators.maxLength(50)]
       ],
       email: [
         this.data?.user?.email || '',
-        [Validators.required, Validators.email]
+        [Validators.required, Validators.email, Validators.pattern(Constant.EMAIL_PATTERN)]
       ],
       role: [
         this.data?.user?.role || ROLE.USER,
-        [Validators.required, Validators.maxLength(500)]
+        [Validators.required]
       ],
       reportTo: [
         { value : this.data?.user?.reportTo?.id || '', disabled : this.data?.user?.role === ROLE.TEAM_LEAD },
         [Validators.required]
       ],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(Constant.PASSSWORD_PATTERN)]]
     });
 
     // remove validators from password we don't need when updating
@@ -116,7 +116,7 @@ export class CreateUpdateUser implements OnInit {
     $performAction.subscribe({
       next: (response: ApiResponse<IUser>) => {
         this.alert.success(response.message);
-        this.dialogRef.close(response.data)
+        this.dialogRef.close(true);
       },
       error: (error: HttpErrorResponse) => {
         this.isSubmitting.set(false);

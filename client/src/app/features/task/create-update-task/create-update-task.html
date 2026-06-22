@@ -6,19 +6,22 @@
         <!-- Title field -->
         <mat-form-field appearance="outline" class="w-100 mb-2">
             <mat-label>Title</mat-label>
-            <input matInput formControlName="title" placeholder="e.g. Finish quarterly report">
+            <input matInput formControlName="title" placeholder="e.g. Finish quarterly report" minlength="10" maxlength="100">
             @if (title?.hasError('required')) {
                 <mat-error>Title is required</mat-error>
             }
             @if (title?.hasError('minlength') && !title?.hasError('required')) {
-                <mat-error>Title must be at least 3 characters</mat-error>
+                <mat-error>Title must be at least 10 characters</mat-error>
+            }
+            @if (title?.hasError('maxlength') && !title?.hasError('minlength') && !title?.hasError('required')) {
+                <mat-error>Title cannot exceed 100 characters</mat-error>
             }
         </mat-form-field>
 
         <!-- Description field -->
         <mat-form-field appearance="outline" class="w-100 mb-2">
             <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" rows="4" placeholder="Add details..."></textarea>
+            <textarea matInput formControlName="description" rows="4" placeholder="Add details..." maxlength="500"></textarea>
             @if (description?.hasError('required')) {
                 <mat-error>Description is required</mat-error>
             }

@@ -7,6 +7,8 @@ export function errorHandler(error: Error, request: Request, res: Response, next
     const statusCode = error instanceof AppError ? error.statusCode : 500;
     const message = error.message || MESSAGES.GENERIC.SERVER_ERROR;
 
+    console.error(error)
+
     const errorResponse: ApiResponse = {
         success: false,
         message,

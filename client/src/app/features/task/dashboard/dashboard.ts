@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUpdateTask } from '../create-update-task/create-update-task';
-import { ApiResponse, ITask, IUser, ROLE } from '@app/shared/interfaces';
+import { ApiResponse, FILTER, ITask, IUser, ROLE } from '@app/shared/interfaces';
 import { MaterialModule } from '@app/shared/modules/material-module';
 import { List } from '@app/shared/components/list/list';
 import { ListAction, ListColumn } from '@app/shared/interfaces/table';
@@ -19,27 +19,27 @@ import { toCapitalCase } from '@app/utility/util';
   imports: [MaterialModule, List],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
-  changeDetection : ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Dashboard {
   private task = inject(Task);
   private user = inject(User);
   private auth = inject(Auth);
   private alert = inject(AlertService);
-  public selectedStatusFilter: 'all' | 'pending' | 'completed' = 'all';
+  public selectedStatusFilter: FILTER = FILTER.ALL;
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
-  @Input() taskType : 'my' | 'team' | 'all' = 'my'; 
+  @Input() taskType: 'my' | 'team' | 'all' = 'my';
 
   // meta info
   public tasks: ITask[] = [];
   private users: IUser[] = [];
-  public pageTitle : string = '';
-  
+  public pageTitle: string = '';
+
   public STATUS_OPTIONS = Constant.STATUS_OPTIONS;
   public options: ListAction[] = [
     { id: '1', name: 'edit', listener: (task: ITask) => this.openTaskDialog(task) },
-    { id: '3', name: 'check_circle', listener: (task: ITask) => this.openTaskDialog(task) },
+    { id: '3', name: 'check_circle', condition : { key : 'status', value : 'pending' }, listener: (task: ITask) => this.markTaskComplete(task!.id as string) },
     { id: '2', name: 'deleted', listener: (id: string) => this.deleteTask(id) }
   ];
 
@@ -60,7 +60,7 @@ export class Dashboard {
   }
 
   refresh() {
-    this.task.taskList(this.taskType).subscribe({
+    this.task.taskList(this.taskType, this.selectedStatusFilter).subscribe({
       next: (response: ApiResponse<ITask[]>) => {
         this.tasks = [...response.data];
         this.cdr.markForCheck()
@@ -73,7 +73,7 @@ export class Dashboard {
 
   userList() {
     // user cannot access this API so this check will not call any API
-    if(this.auth.user?.role === ROLE.USER) return;
+    if (this.auth.user?.role === ROLE.USER) return;
 
     this.user.assignableUsers().subscribe({
       next: (response: ApiResponse<IUser[]>) => {
@@ -92,23 +92,39 @@ export class Dashboard {
       data: {
         task: taskToEdit,
         canReassign: [ROLE.MANAGER, ROLE.TEAM_LEAD].includes(this.auth.user!.role),
-        assignableUsers : this.users
+        assignableUsers: this.users
       }
     });
 
     dialogRef.afterClosed().subscribe((formResult: any) => {
       if (!formResult) return;
-      this.refresh();      
+      this.refresh();
     });
-  }
-
-  onStatusFilterChange(): void {
-    // this.applyFilter();
   }
 
   deleteTask(id?: string): void {
     if (id && confirm('Are you sure you want to remove this task?')) {
-      this.tasks = this.tasks.filter(t => t.id !== id);
+      this.task.delete(id).subscribe({
+        next: (response: ApiResponse<ITask>) => {
+          this.alert.success(response.message);
+          this.refresh();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.alert.error(error.error.message);
+        }
+      })
     }
+  }
+
+  markTaskComplete(id: string): void {
+    this.task.markTaskComplete(id).subscribe({
+      next: (response: ApiResponse<ITask>) => {
+        this.alert.success(response.message);
+        this.refresh();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.alert.error(error.error.message);
+      }
+    })
   }
 }

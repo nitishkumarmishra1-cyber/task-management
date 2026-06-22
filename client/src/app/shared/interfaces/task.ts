@@ -1,6 +1,6 @@
 export enum STATUS {
-    PENDING = 'pending',
-    COMPLETED = 'completed'
+  PENDING = 'pending',
+  COMPLETED = 'completed'
 }
 
 export interface ITask {
@@ -9,4 +9,11 @@ export interface ITask {
   description: string;
   status: STATUS;
   assignedTo?: string;
+}
+
+export enum FILTER {
+  ALL = 'all',
+  PENDING = STATUS.PENDING,
+  COMPLETED = STATUS.COMPLETED,
+  TEAM = 'team'
 }

@@ -17,3 +17,9 @@ export interface ILogin {
     enail : string;
     password : string;
 }
+
+export enum USER_FILTER {
+    ALL = 'all',
+    USER = ROLE.USER,
+    TEAM_LEAD = ROLE.TEAM_LEAD
+}

@@ -6,6 +6,7 @@ import { ApiResponse, IUser } from '../../shared/interfaces';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '../../shared/services/snackbar';
 import { Router } from '@angular/router';
+import { Constant } from '@app/utility/constant';
 
 @Component({
   selector: 'app-login',
@@ -25,8 +26,8 @@ export class Login {
 
   constructor() {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      email: ['', [Validators.required, Validators.email, Validators.pattern(Constant.EMAIL_PATTERN)]],
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 

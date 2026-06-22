@@ -12,7 +12,6 @@ export const hashPassword = (password: string): Promise<string> => {
 };
 
 export const verifyPassword = (password: string, storedHash: string): Promise<boolean> => {
-    console.log(hashPassword(password))
     const [salt, originalHash] = storedHash.split(':');
 
     return new Promise((resolve, reject) => {

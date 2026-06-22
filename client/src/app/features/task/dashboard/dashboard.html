@@ -15,7 +15,7 @@
     <div class="toolbar-row mb-3">
         <mat-form-field appearance="outline" class="status-filter">
             <mat-label>Filter by Status</mat-label>
-            <mat-select [(value)]="selectedStatusFilter" (selectionChange)="onStatusFilterChange()">
+            <mat-select [(value)]="selectedStatusFilter" (selectionChange)="refresh()">
                 <mat-option value="all">All</mat-option>
                 @for (item of STATUS_OPTIONS; track $index) {
                 <mat-option [value]="item.value">{{item.label}}</mat-option>

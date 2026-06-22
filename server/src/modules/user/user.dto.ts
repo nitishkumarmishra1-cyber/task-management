@@ -1,13 +1,14 @@
 import { z } from 'zod';
 import { objectIdSchema } from '../../shared/utility/util.js';
-import { ROLE } from '../../shared/interfaces/user.js';
+import { FILTER, ROLE } from '../../shared/interfaces/user.js';
+import { AppConstant } from '../../shared/utility/constant.js';
 
 export const CreateUserSchema = z.object({
     body: z.object({
         name: z.string().min(2, 'Name must be at least 2 characters'),
         email: z.email('Invalid email format'),
         role: z.enum(ROLE),
-        password: z.string().min(8, 'Password must be at least 8 characters'),
+        password: z.string().min(8, 'Password must be at least 8 characters').regex(AppConstant.PASSSWORD_PATTERN, 'Password must include an uppercase letter, lowercase letter, number, and special character.'),
         reportTo: z.string()
     }),
 });
@@ -21,6 +22,12 @@ export const UpdateUserSchema = z.object({
     }),
     params: z.object({
         id: objectIdSchema,
+    })
+});
+
+export const GetUserSchema = z.object({
+    query: z.object({
+        role: z.enum(FILTER).optional().default(FILTER.ALL)
     })
 });
 

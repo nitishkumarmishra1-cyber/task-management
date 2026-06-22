@@ -3,6 +3,7 @@ import { Api } from './api';
 import { Observable, shareReplay } from 'rxjs';
 import { ApiResponse, IUser } from '../interfaces';
 import { Constant } from '../../utility/constant';
+import { USER_FILTER } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root',
@@ -22,12 +23,12 @@ export class User {
     return this.api.get<ApiResponse<IUser>>(`${Constant.USER_ME}`)
   }
 
-  public userList(): Observable<ApiResponse<IUser[]>> {
-    return this.api.get<ApiResponse<IUser[]>>(`${Constant.USER_LIST}`)
+  public userList(filter : USER_FILTER): Observable<ApiResponse<IUser[]>> {
+    return this.api.get<ApiResponse<IUser[]>>(`${Constant.USER_LIST}?role=${filter}`)
   }
 
-  public delete(id: string): Observable<ApiResponse<IUser[]>> {
-    return this.api.delete<ApiResponse<IUser[]>>(`${Constant.DELETE_USER}${id}`)
+  public delete(id: string): Observable<ApiResponse<IUser>> {
+    return this.api.delete<ApiResponse<IUser>>(`${Constant.DELETE_USER}${id}`)
   }
 
   public assignableUsers(): Observable<ApiResponse<IUser[]>> {

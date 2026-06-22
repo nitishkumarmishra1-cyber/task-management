@@ -1,6 +1,7 @@
 import User from './user.model.js';
 import { CreateUserDto, UpdateUserDto } from './user.dto.js';
 import { toObjectId } from '../../shared/utility/util.js';
+import { FILTER } from '../../shared/interfaces/user.js';
 
 export class UserRepository {
     async create(data: CreateUserDto) {
@@ -19,16 +20,22 @@ export class UserRepository {
         return User.findOne({ email }).select('+password');
     }
 
-    async findAll(userId : string) {
-        return User.find({ _id : { $ne : toObjectId(userId) } }).populate('reportTo', 'name');
+    async findAll(userId : string, roleFilter : FILTER) {
+        const filter = roleFilter === FILTER.ALL ? {} : { role : roleFilter };
+        return User.find({ _id : { $ne : toObjectId(userId) }, ...filter }).populate('reportTo', 'name');
     }
 
     async findAssignableUsers(userId : string) {
         return User.find()
     }
 
-    async findReportees(userId : string) {
-        return User.find({ reportTo : toObjectId(userId) }).populate('reportTo', 'name');
+    async findReporteesWithTeamLead(userId : string) {
+        return User.find({ isActive : true, $or : [{ _id : toObjectId(userId) }, { reportTo : toObjectId(userId) }] })
+    }
+
+    async findReportees(userId : string, roleFilter : FILTER = FILTER.ALL) {
+        const filter = roleFilter === FILTER.ALL ? {} : { role : roleFilter };
+        return User.find({ reportTo : toObjectId(userId), ...filter }).populate('reportTo', 'name');
     }
 
     async updateById(id: string, data: UpdateUserDto) {

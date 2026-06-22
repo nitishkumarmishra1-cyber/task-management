@@ -7,15 +7,14 @@ const taskSchema = new Schema({
         type: String,
         required: [true, 'Title is required'],
         trim: true,
-        minLength: [2, 'Title must be at least 2 characters'],
-        maxLength: [50, 'Title must not exceed 50 characters']
+        minLength: [10, 'Title must be at least 10 characters'],
+        maxLength: [100, 'Title must not exceed 100 characters']
     },
     description: {
         type: String,
         required: [true, 'Description is required'],
         trim: true,
-        minLength: [10, 'Description must be at least 10 characters'],
-        maxLength: [200, 'Description must not exceed 200 characters']
+        maxLength: [250, 'Description must not exceed 200 characters']
     },
     assignTo: {
         type: Types.ObjectId,

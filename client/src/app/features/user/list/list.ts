@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUpdateUser } from '../create-update-user/create-update-user';
 import { ApiResponse, ITask, IUser, ROLE, STATUS } from '@app/shared/interfaces';
@@ -10,25 +10,27 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '@app/shared/services/snackbar';
 import { Constant } from '@app/utility/constant';
 import { Auth } from '@app/shared/services/auth';
+import { USER_FILTER } from '@app/shared/interfaces/user';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [MaterialModule, List],
   templateUrl: './list.html',
-  styles : []
+  styles: []
 })
 export class UserList {
-  public selectedStatusFilter: 'all' | 'pending' | 'completed' = 'all';
+  public selectedStatusFilter: USER_FILTER = USER_FILTER.ALL;
   private dialog = inject(MatDialog);
   private user = inject(User);
   private cdr = inject(ChangeDetectorRef);
   private alert = inject(AlertService);
   private auth = inject(Auth);
-  
+
   public users: IUser[] = [];
-  public assignableUsers : IUser[] = []; 
+  public assignableUsers: IUser[] = [];
   public ROLE_OPTIONS = Constant.ROLE_OPTION(this.auth.user?.role as ROLE);
+  public showAddUser = signal(false);
 
   public options: ListAction[] = [
     { id: '1', name: 'edit', listener: (user: IUser) => this.openTaskDialog(user) },
@@ -44,14 +46,15 @@ export class UserList {
   ];
 
 
-  ngOnInit() { 
+  ngOnInit() {
     // load tasks
+    this.showAddUser.set(this.auth.user?.role === ROLE.MANAGER);
     this.refresh();
     this.userList();
   }
 
   refresh() {
-    this.user.userList().subscribe({
+    this.user.userList(this.selectedStatusFilter).subscribe({
       next: (response: ApiResponse<IUser[]>) => {
         this.users = [...response.data];
         this.cdr.markForCheck()
@@ -77,7 +80,7 @@ export class UserList {
     const dialogRef = this.dialog.open(CreateUpdateUser, {
       width: '550px',
       disableClose: true,
-      data: { user: userToEdit, assignableUsers : this.assignableUsers }
+      data: { user: userToEdit, assignableUsers: this.assignableUsers }
     });
 
     dialogRef.afterClosed().subscribe((formResult: any) => {
@@ -86,13 +89,17 @@ export class UserList {
     });
   }
 
-  onStatusFilterChange(): void {
-    // this.applyFilter();
-  }
-
   deleteTask(id?: string): void {
     if (id && confirm('Are you sure you want to remove this task?')) {
-      this.users = this.users.filter(t => t.id !== id);
+      this.user.delete(id).subscribe({
+        next: (response: ApiResponse<IUser>) => {
+          this.alert.success(response.message);
+          this.refresh();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.alert.error(error.error.message);
+        }
+      })
     }
   }
 }

@@ -12,11 +12,12 @@ export class AuthController {
     }
 
     async userLogin(request: Request, response: Response): Promise<void> {
+        console.log(request.body)
         const { token, user } = await this.authService.authentication(request.body);
 
         response.cookie('accessToken', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'development',
+            secure: true,
             sameSite: 'strict',
             maxAge: 15 * 60 * 1000,
         });

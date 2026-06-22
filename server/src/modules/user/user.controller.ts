@@ -3,7 +3,7 @@ import UserService from "./user.service.js";
 import { sendSuccess } from "../../core/send-response.js";
 import { HTTP_STATUS, MESSAGES } from "../../core/message.js";
 import { AuthenticatedRequest } from "../../shared/interfaces/authenticated-request.js";
-import { IUser, ROLE } from "../../shared/interfaces/user.js";
+import { FILTER, IUser, ROLE } from "../../shared/interfaces/user.js";
 
 export default class UserController {
     private service!: UserService;
@@ -18,15 +18,14 @@ export default class UserController {
     }
 
     async assignableUsers(request: AuthenticatedRequest, response: Response): Promise<void> {
-        const id = request.user!.id as string;
-        const users = await this.service.assignableUsers(id);
+        const users = await this.service.assignableUsers(request.user as IUser);
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, users)
     }
 
     async userList(request: AuthenticatedRequest, response: Response): Promise<void> {
         const id = request.user!.id as string;
         const role = request.user!.role as ROLE;
-        const users = await this.service.userList(id, role);
+        const users = await this.service.userList(id, role, request.query!.role as FILTER);
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, users)
     }
 

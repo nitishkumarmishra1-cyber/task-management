@@ -3,7 +3,7 @@ import { AppError } from '../../core/app.error.js';
 import { CreateUserDto, UpdateUserDto } from './user.dto.js';
 import { hashPassword } from '../../shared/utility/password.js';
 import { HTTP_STATUS, MESSAGES } from '../../core/message.js';
-import { IUser, ROLE } from '../../shared/interfaces/user.js';
+import { FILTER, IUser, ROLE } from '../../shared/interfaces/user.js';
 
 export default class UserService {
     async createUser(data: CreateUserDto) {
@@ -32,28 +32,32 @@ export default class UserService {
         return user;
     }
 
-    async assignableUsers(userId : string) {
-        return userRepository.findAssignableUsers(userId);
-    }
-
-    async userList(userId : string, role : ROLE) {
-        if(role === ROLE.MANAGER) {
-            return userRepository.findAll(userId);;
+    async assignableUsers(user: IUser) {
+        if (user.role === ROLE.TEAM_LEAD) {
+            return userRepository.findReporteesWithTeamLead(user.id);
         } else {
-            return userRepository.findReportees(userId);
+            return userRepository.findAssignableUsers(user.id);
         }
     }
 
-    async updateUser(id: string, data: UpdateUserDto, auth_User : IUser) {
+    async userList(userId: string, role: ROLE, roleFilter : FILTER = FILTER.ALL) {
+        if (role === ROLE.MANAGER) {
+            return userRepository.findAll(userId, roleFilter);;
+        } else {
+            return userRepository.findReportees(userId, roleFilter);
+        }
+    }
+
+    async updateUser(id: string, data: UpdateUserDto, auth_User: IUser) {
         // this record can only update by self and manager
-        if(!(auth_User.role === ROLE.MANAGER || auth_User.id === id)) {
+        if (!(auth_User.role === ROLE.MANAGER || auth_User.id === id)) {
             throw new AppError(MESSAGES.GENERIC.FORBIDDEN, HTTP_STATUS.FORBIDDEN)
         }
 
         const existingUser = await userRepository.findById(id);
-        if(existingUser.email !== data.email) {
+        if (existingUser.email !== data.email) {
             const hasEmail = await userRepository.existsByEmail(data!.email as string);
-            if(hasEmail) {
+            if (hasEmail) {
                 throw new AppError(MESSAGES.USER.EMAIL_ALREADY_EXISTS, HTTP_STATUS.BAD_REQUEST)
             }
         }
