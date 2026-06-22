@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["angular:styles/component:css;2f45a4833931d4e1a4c678fc8ed3fc19901f0b99f69895bb7b0be1f884df7078;/Users/nitishmishra/Desktop/Projects/Task-Management/client/src/app/features/user/create-update-user/create-update-user.ts"],
-  "sourcesContent": ["\n    .w-100 { width: 100%; }\n    .mb-2 { margin-bottom: 0.5rem; }\n  "],
-  "mappings": ";AACI,CAAC;AAAQ,SAAO;AAAM;AACtB,CAAC;AAAO,iBAAe;AAAQ;",
-  "names": []
-}

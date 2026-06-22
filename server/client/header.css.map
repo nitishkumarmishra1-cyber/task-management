@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/layout/header/header.css"],
-  "sourcesContent": [".header-container {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  width: 100%;\n}\n\n.brand {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-size: 1.1rem;\n  font-weight: 500;\n}\n\n.logo-icon {\n  font-size: 28px;\n  height: 28px;\n  width: 28px;\n}\n\n.actions {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n\n.menu-user-info {\n  display: flex;\n  flex-direction: column;\n  padding: 12px 16px;\n}\n\n.menu-username {\n  font-weight: 500;\n  font-size: 0.95rem;\n}\n\n.menu-role {\n  font-size: 0.8rem;\n  color: rgba(0, 0, 0, 0.6);\n}\n\n::ng-deep .mat-mdc-menu-panel.profile-menu-panel {\n  min-width: 220px;\n  max-width: 320px;\n}"],
-  "mappings": ";AAAA,CAAC;AACC,WAAS;AACT,eAAa;AACb,mBAAiB;AACjB,SAAO;AACT;AAEA,CAAC;AACC,WAAS;AACT,eAAa;AACb,OAAK;AACL,aAAW;AACX,eAAa;AACf;AAEA,CAAC;AACC,aAAW;AACX,UAAQ;AACR,SAAO;AACT;AAEA,CAAC;AACC,WAAS;AACT,eAAa;AACb,OAAK;AACP;AAEA,CAAC;AACC,WAAS;AACT,kBAAgB;AAChB,WAAS,KAAK;AAChB;AAEA,CAAC;AACC,eAAa;AACb,aAAW;AACb;AAEA,CAAC;AACC,aAAW;AACX,SAAO,KAAK,CAAC,EAAE,CAAC,EAAE,CAAC,EAAE;AACvB;AAEA,UAAU,CAAC,kBAAkB,CAAC;AAC5B,aAAW;AACX,aAAW;AACb;",
-  "names": []
-}

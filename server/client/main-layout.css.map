@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/layout/main-layout/main-layout.css"],
-  "sourcesContent": [".content-wrapper {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: flex-start;\n    min-height: calc(100vh - 64px);\n    background-color: #f5f5f5;\n    padding: 2rem 1rem;\n    box-sizing: border-box;\n}\n\n.content-wrapper>* {\n    width: 100%;\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\n.header-container {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    width: 100%;\n    max-width: 1200px;\n    margin: 0 auto;\n    padding: 16px 16px;\n}\n\n.brand {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    font-weight: 500;\n    font-size: 1.25rem;\n    letter-spacing: 0.5px;\n\n    .logo-icon {\n        font-size: 28px;\n        width: 28px;\n        height: 28px;\n    }\n}\n\n.active-link {\n  background-color: rgba(0, 0, 0, 0.06) !important;  /* !important try karo agar override ho raha ho */\n  font-weight: 500;\n}"],
-  "mappings": ";AAAA,CAAC;AACG,WAAS;AACT,kBAAgB;AAChB,eAAa;AACb,mBAAiB;AACjB,cAAY,KAAK,MAAM,EAAE;AACzB,oBAAkB;AAClB,WAAS,KAAK;AACd,cAAY;AAChB;AAEA,CAXC,gBAWe,EAAC;AACb,SAAO;AACP,aAAW;AACX,UAAQ,EAAE;AACd;AAEA,CAAC;AACG,WAAS;AACT,mBAAiB;AACjB,eAAa;AACb,SAAO;AACP,aAAW;AACX,UAAQ,EAAE;AACV,WAAS,KAAK;AAClB;AAEA,CAAC;AACG,WAAS;AACT,eAAa;AACb,OAAK;AACL,eAAa;AACb,aAAW;AACX,kBAAgB;AAOpB;AAbA,CAAC,MAQG,CAAC;AACG,aAAW;AACX,SAAO;AACP,UAAQ;AACZ;AAGJ,CAAC;AACC,oBAAkB,KAAK,CAAC,EAAE,CAAC,EAAE,CAAC,EAAE;AAChC,eAAa;AACf;",
-  "names": []
-}
