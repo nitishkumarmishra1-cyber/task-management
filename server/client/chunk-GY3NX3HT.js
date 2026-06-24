@@ -1,0 +1,1 @@
+import{Gb as n,L as t,cd as i}from"./chunk-RPAGAUKZ.js";var f=(...s)=>(u,a)=>{let e=t(i),r=t(n);if(!e.checkSession())return r.parseUrl("/auth/login");let o=e.user?.role;return!o||!s.includes(o)?r.parseUrl("/task-management/task-list"):!0};export{f as a};

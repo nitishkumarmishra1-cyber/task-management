@@ -1,1 +1,0 @@
-import{a as o}from"./chunk-PRDLCQON.js";import"./chunk-MIJXRQ5G.js";import"./chunk-2NFLSA4Y.js";var i=[{path:"",canActivate:[o("manager","team-lead")],loadComponent:()=>import("./chunk-W3UK6LQU.js").then(t=>t.UserList)}];export{i as USER_ROUTES};
