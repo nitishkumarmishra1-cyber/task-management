@@ -6,6 +6,8 @@ import { IUser, ROLE } from '../../shared/interfaces/user.js';
 import notificationRepository from '../notification/notification.repository.js';
 import { INotification } from '../../shared/interfaces/notification.js';
 import { FILTER } from '../../shared/interfaces/task.js';
+import eventBus from '../../socket/event.js';
+import { AppConstant } from '../../shared/utility/constant.js';
 
 export default class TaskService {
     async createTask(data: CreateTaskDto, auth_User: IUser) {
@@ -21,10 +23,12 @@ export default class TaskService {
                 isView : false,
                 receiverId : data.assignTo,
                 senderId : auth_User.id
-            }
+            } //
 
             // sending notification to user
             await notificationRepository.create(notification)
+            eventBus.emit(AppConstant.NOTIFICATION_UPDATE, { userId : data.assignTo, data : { status : true, eventId: crypto.randomUUID(), 'notification:update' : true } });
+            eventBus.emit(AppConstant.TASK_UPDATE, { userId : data.assignTo, data : { status : true, eventId: crypto.randomUUID(), 'task:update' : true } });
         }
 
         return task;

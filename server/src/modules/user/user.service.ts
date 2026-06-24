@@ -62,6 +62,11 @@ export default class UserService {
             }
         }
 
+        // for manager we don't need reportTo
+        if(data.role === ROLE.MANAGER && auth_User.role === ROLE.MANAGER && !data.reportTo) {
+            data.reportTo = undefined;
+        }
+
         const user = await userRepository.updateById(id, data);
         if (!user) {
             throw new AppError(MESSAGES.USER.NOT_FOUND, HTTP_STATUS.NOT_FOUND);

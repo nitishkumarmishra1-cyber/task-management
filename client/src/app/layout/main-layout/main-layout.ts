@@ -2,8 +2,9 @@ import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Header } from '../header/header';
 import { MaterialModule } from '../../shared/modules/material-module';
-import { ROLE, SidebarMenuItem } from '../../shared/interfaces';
+import { IUser, ROLE, SidebarMenuItem } from '../../shared/interfaces';
 import { Auth } from '../../shared/services/auth';
+import { SocketService } from '@app/shared/services/socket';
 
 @Component({
   selector: 'app-main-layout',
@@ -13,10 +14,12 @@ import { Auth } from '../../shared/services/auth';
 })
 export class MainLayout {
   private auth = inject(Auth);
+  private socket = inject(SocketService);
   menuItems: SidebarMenuItem[] = [];
 
   ngOnInit(): void {
     this.menuItems = this.buildMenuForRole(this.auth.user?.role);
+    this.socket.registerSocket();
   }
 
   private buildMenuForRole(role: ROLE = ROLE.USER): SidebarMenuItem[] {

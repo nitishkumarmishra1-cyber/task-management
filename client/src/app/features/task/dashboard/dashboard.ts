@@ -12,6 +12,7 @@ import { AlertService } from '@app/shared/services/snackbar';
 import { Constant } from '@app/utility/constant';
 import { User } from '@app/shared/services/user';
 import { toCapitalCase } from '@app/utility/util';
+import { SocketService } from '@app/shared/services/socket';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,9 @@ export class Dashboard {
   public selectedStatusFilter: FILTER = FILTER.ALL;
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
+  private socket = inject(SocketService);
+  private readonly socketEvent: string = 'task:update';
+
   @Input() taskType: 'my' | 'team' | 'all' = 'my';
 
   // meta info
@@ -39,7 +43,7 @@ export class Dashboard {
   public STATUS_OPTIONS = Constant.STATUS_OPTIONS;
   public options: ListAction[] = [
     { id: '1', name: 'edit', listener: (task: ITask) => this.openTaskDialog(task) },
-    { id: '3', name: 'check_circle', condition : { key : 'status', value : 'pending' }, listener: (task: ITask) => this.markTaskComplete(task!.id as string) },
+    { id: '3', name: 'check_circle', condition: { key: 'status', value: 'pending' }, listener: (task: ITask) => this.markTaskComplete(task!.id as string) },
     { id: '2', name: 'deleted', listener: (id: string) => this.deleteTask(id) }
   ];
 
@@ -52,6 +56,12 @@ export class Dashboard {
 
   ngOnInit() {
     this.userList();
+
+    // registering this event so update whenever event comes
+    this.socket.on(this.socketEvent, data => {
+      console.log('socket event received', data.eventId, data.timestamp);
+      this.refresh()
+    });
   }
 
   ngOnChanges() {
@@ -126,5 +136,10 @@ export class Dashboard {
         this.alert.error(error.error.message);
       }
     })
+  }
+
+  ngOnDestory() {
+    this.socket.off(this.socketEvent)
+    this.socket.disconnect();
   }
 }

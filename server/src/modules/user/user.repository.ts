@@ -17,7 +17,7 @@ export class UserRepository {
     }
 
     async findByEmailWithPassword(email: string) {
-        return User.findOne({ email }).select('+password');
+        return User.findOne({ email }).select('+password').populate('reportTo', 'name');
     }
 
     async findAll(userId : string, roleFilter : FILTER) {

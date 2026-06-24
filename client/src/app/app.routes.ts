@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { authGuard } from './shared/guard/auth-guard';
+import { Authorize } from './shared/guard/permission-guard';
+import { ROLE } from './shared/interfaces';
 
 export const routes: Routes = [
     {
@@ -24,6 +26,7 @@ export const routes: Routes = [
             },
             {
                 path: 'user-list',
+                canActivate : [Authorize(ROLE.MANAGER, ROLE.TEAM_LEAD)],
                 loadChildren: () => import('./features/user/user.routes').then(m => m.USER_ROUTES)
             },
             {

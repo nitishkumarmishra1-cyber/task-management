@@ -12,6 +12,7 @@ import { toCapitalCase } from '@app/utility/util';
 import { Notification } from '@app/shared/services/notification';
 import { ApiResponse } from '@app/shared/interfaces';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SocketService } from '@app/shared/services/socket';
 
 @Component({
   selector: 'app-header',
@@ -30,7 +31,9 @@ export class Header {
   private auth = inject(Auth);
   private notification = inject(Notification);
   private dialog = inject(MatDialog);
+  private socket = inject(SocketService);
   public notificationCount = signal(0);
+  private readonly socketEvent : string = 'notification:update';
 
   currentUsername = '';
   currentUserRole = '';
@@ -39,6 +42,9 @@ export class Header {
     this.currentUsername = toCapitalCase(this.auth.user!.name ?? '');
     this.currentUserRole = toCapitalCase(this.auth.user!.role ?? '');
     this.getCount();
+
+    // registering this event so update whenever event comes
+    this.socket.on(this.socketEvent, this.getCount.bind(this))
   }
 
   editProfile() : void {
@@ -54,6 +60,7 @@ export class Header {
   }
 
   getCount() {
+    console.log('sdfdsgfd')
     this.notification.unseenCount().subscribe({
       next : (response : ApiResponse<number>) => {
         this.notificationCount.set(response.data)
@@ -64,7 +71,13 @@ export class Header {
     })
   }
 
+  ngOnDestory() {
+    this.socket.off(this.socketEvent)
+    this.socket.disconnect();
+  }
+
   onLogout(): void {
-    this.auth.logout()
+    this.auth.logout();
+    this.socket.disconnect();
   }
 }

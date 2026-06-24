@@ -12,7 +12,7 @@ export function signToken(data: IUser): string {
         {
             algorithm: 'HS256',
             issuer: 'task-management.com',
-            expiresIn: '15m'
+            expiresIn: '30m'
         }
     )
 }
@@ -23,7 +23,7 @@ export function verifyToken(token: string): IUser {
             algorithms: ['HS256'],
             issuer: 'task-management.com',
         });
-
+ 
         return decoded as IUser;
 
     } catch (err) {

@@ -25,6 +25,9 @@
             @if (description?.hasError('required')) {
                 <mat-error>Description is required</mat-error>
             }
+            @if (description?.hasError('minlength') && !description?.hasError('required')) {
+                <mat-error>Title must be at least 2 characters</mat-error>
+            }
             @if (description?.hasError('maxlength') && !description?.hasError('required')) {
                 <mat-error>Description cannot exceed 500 characters</mat-error>
             }

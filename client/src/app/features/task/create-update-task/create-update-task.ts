@@ -44,11 +44,11 @@ export class CreateUpdateTask implements OnInit {
     this.taskForm = this.fb.group({
       title: [
         this.data?.task?.title || '',
-        [Validators.required, Validators.minLength(10), Validators.minLength(100)]
+        [Validators.required, Validators.minLength(10), Validators.maxLength(100)]
       ],
       description: [
         this.data?.task?.description || '',
-        [Validators.required, Validators.maxLength(500)]
+        [Validators.required, Validators.minLength(2), Validators.maxLength(500)]
       ],
       status: [
         this.data?.task?.status || STATUS.PENDING,

@@ -8,8 +8,15 @@ import router from './routes/index.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { corsConfig } from './core/setting.js';
 import { AppError } from './core/app.error.js';
+import { createServer } from 'node:http';
+import initSocket from './socket/index.js';
+
 
 const app = express();
+
+// setup socket server
+const server = createServer(app);
+initSocket(server);
 
 app.use(helmet());
 app.use(cors(corsConfig));
@@ -35,4 +42,4 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(errorHandler);
 
-export default app;
+export default server;

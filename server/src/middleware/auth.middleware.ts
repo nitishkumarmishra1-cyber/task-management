@@ -3,6 +3,7 @@ import { AppError } from '../core/app.error.js';
 import { AuthenticatedRequest } from '../shared/interfaces/authenticated-request.js';
 import { verifyToken } from '../shared/utility/jwt.js';
 import { HTTP_STATUS, MESSAGES } from '../core/message.js';
+import { Socket } from 'socket.io';
 
 export async function authenticate(request: AuthenticatedRequest, response: Response, next: NextFunction) {
     const authHeader = request.headers['authorization'];
@@ -22,5 +23,19 @@ export async function authenticate(request: AuthenticatedRequest, response: Resp
         next();
     } catch (error) {
         next(error);
+    }
+}
+
+export async function socketAuthMiddleware(socket: Socket, next: (err?: Error) => void) {
+    const authToken = socket.handshake.auth.token;
+
+    if (!authToken) return next(new AppError(MESSAGES.AUTH.ACCESS_DENIED, HTTP_STATUS.UNAUTHORIZED));
+
+    try {
+        const decoded = await verifyToken(authToken);
+        socket.data.user = decoded;
+        next();
+    } catch(error) {
+        next(error as Error);
     }
 }
