@@ -12,7 +12,7 @@ import { AlertService } from '@app/shared/services/snackbar';
 import { Constant } from '@app/utility/constant';
 import { toCapitalCase } from '@app/utility/util';
 import { SocketService } from '@app/shared/services/socket';
-import { BehaviorSubject, debounceTime, map, merge, Observable, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, finalize, map, merge, Observable, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -34,6 +34,7 @@ export class Dashboard implements OnInit, OnChanges, OnDestroy {
   private readonly socketEvent: string = 'task:update';
   public filter$ = new BehaviorSubject<FILTER>(FILTER.ALL);
   private refresh$ = new Subject<void>();
+  public isLoading = signal(false);
 
   @Input() taskType: 'my' | 'team' | 'all' = 'my';
 
@@ -41,8 +42,10 @@ export class Dashboard implements OnInit, OnChanges, OnDestroy {
     this.filter$.asObservable(),
     this.refresh$.pipe(map(() => this.filter$.value))
   ).pipe(
+    tap(() => this.isLoading.set(true)),
     debounceTime(500),
-    switchMap((value: FILTER) => this.task.taskList(this.taskType, value))
+    switchMap((value: FILTER) => this.task.taskList(this.taskType, value)),
+    finalize(() => this.isLoading.set(false))
   );
 
   public pageTitle = signal('');

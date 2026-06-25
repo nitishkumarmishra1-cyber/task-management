@@ -27,16 +27,26 @@
     <mat-divider class="mb-3"></mat-divider>
 
     <div class="table-responsive">
-        @if (tasks().length === 0) {
-        <div class="empty-state text-center p-5">
-            <mat-icon class="empty-icon" color="disabled">assignment</mat-icon>
-            <p class="empty-title m-0">No tasks found</p>
-            <p class="empty-subtitle text-muted">
-                {{ filter$.value === 'all' ? 'No tasks assigned yet.' : 'No ' + filter$.value + ' tasks right now.' }}
-            </p>
-        </div>
+        
+        @if (isLoading()) {
+            <div class="loading-container">
+                <div class="loading-shimmer">
+                    <mat-spinner diameter="24"></mat-spinner>
+                    <p>Loading tasks...</p>
+                </div>
+            </div>
         } @else {
-        <app-list [data]="tasks()" [columns]="columns" [options]="options"></app-list>
+            @if (tasks().length === 0) {
+            <div class="empty-state text-center p-5">
+                <mat-icon class="empty-icon" color="disabled">assignment</mat-icon>
+                <p class="empty-title m-0">No tasks found</p>
+                <p class="empty-subtitle text-muted">
+                    {{ filter$.value === 'all' ? 'No tasks assigned yet.' : 'No ' + filter$.value + ' tasks right now.' }}
+                </p>
+            </div>
+            } @else {
+            <app-list [data]="tasks()" [columns]="columns" [options]="options"></app-list>
+            }
         }
     </div>
 </div>
