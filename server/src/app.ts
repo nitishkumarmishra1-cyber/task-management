@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import path from 'path';
+// import path from 'path';
 
 import router from './routes/index.js';
 import { errorHandler } from './middleware/error.middleware.js';

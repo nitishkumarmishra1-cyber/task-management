@@ -12,7 +12,7 @@ export const AppSetting = {
 } as const;
 
 export const corsConfig: CorsOptions = {
-    origin: ['http://localhost:4200'],
+    origin: ['http://localhost:4200', 'https://task-management-1-34ya.onrender.com'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
