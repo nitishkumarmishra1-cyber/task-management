@@ -22,7 +22,7 @@
                             Enter a valid email address
                         </mat-error>
                         }
-                        @if (email?.hasError('pattern') && !email?.hasError('minlength') && !email?.hasError('required')) {
+                        @if (email?.hasError('pattern') && !email?.hasError('email') && !email?.hasError('required')) {
                         <mat-error >
                             Enter a valid email address
                         </mat-error>
