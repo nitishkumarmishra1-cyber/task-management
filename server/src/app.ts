@@ -29,18 +29,18 @@ app.get('/health', (req: Request, res: Response) => {
     res.status(200).json({ message: 'Server is healthy!' });
 })
 
-const clientPath = path.resolve('client');
-app.use(express.static(clientPath));
+// const clientPath = path.resolve('client');
+// app.use(express.static(clientPath));
 
-app.get('/*splat', (req: Request, res: Response) => {
-    res.sendFile(path.join(clientPath, 'index.html'), {
-        headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-        }
-    });
-});
+// // app.get('/*splat', (req: Request, res: Response) => {
+// //     res.sendFile(path.join(clientPath, 'index.html'), {
+// //         headers: {
+// //             'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+// //             'Pragma': 'no-cache',
+// //             'Expires': '0'
+// //         }
+// //     });
+// // });
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     next(new AppError(`Route ${req.originalUrl} not found`, 404));
