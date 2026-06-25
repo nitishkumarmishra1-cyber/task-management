@@ -38,11 +38,12 @@ export class SocketService {
   }
 
   off(event: string) {
+    if (!this.socket?.connected) return;
     this.socket.off(event);
   }
 
   disconnect() {
-    if (!this.socket) return;
+    if (!this.socket?.connected) return;
     this.socket.removeAllListeners();
     this.socket.disconnect();
     this.socket = null!;

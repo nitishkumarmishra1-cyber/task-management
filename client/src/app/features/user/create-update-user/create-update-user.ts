@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiResponse, IUser, ROLE, STATUS } from '@app/shared/interfaces/index';
@@ -27,10 +28,12 @@ export class CreateUpdateUser implements OnInit {
   private user = inject(User);
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<CreateUpdateUser>);
-  public data: { user: IUser, assignableUsers: IUser[] } | any = inject<CreateUpdateUser>(MAT_DIALOG_DATA);
+  public data: { user: IUser } | any = inject<CreateUpdateUser>(MAT_DIALOG_DATA);
   private alert = inject(AlertService);
+  private destroyRef = inject(DestroyRef);
 
   userForm!: FormGroup;
+  assignableUsers$ = this.user.assignableUsers();
   isEditMode = false;
   hidePassword = true;
   ROLE_OPTIONS = Constant.ROLE_OPTION(this.auth.user?.role as ROLE);
@@ -69,7 +72,7 @@ export class CreateUpdateUser implements OnInit {
         [Validators.required]
       ],
       reportTo: [
-        { value : this.data?.user?.reportTo?.id || '', disabled : this.data?.user?.role === ROLE.TEAM_LEAD },
+        { value: this.data?.user?.reportTo?.id || '', disabled: this.data?.user?.role === ROLE.TEAM_LEAD },
         [Validators.required]
       ],
       password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(Constant.PASSSWORD_PATTERN)]]
@@ -104,16 +107,15 @@ export class CreateUpdateUser implements OnInit {
     let $performAction = this.user.create(payload);
     if (this.isEditMode) {
       if (this.isProfile()) {
-      this.userForm.get('role')?.clearValidators();
-      this.userForm.get('reportTo')?.clearValidators();
-    }
-
+        this.userForm.get('role')?.clearValidators();
+        this.userForm.get('reportTo')?.clearValidators();
+      }
 
       delete payload.password;
       $performAction = this.user.update(this.data?.user?.id, payload)
     }
 
-    $performAction.subscribe({
+    $performAction.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response: ApiResponse<IUser>) => {
         this.alert.success(response.message);
         this.dialogRef.close(true);

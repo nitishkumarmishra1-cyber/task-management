@@ -3,7 +3,6 @@
     <div class="card-header mb-4">
         <div class="title-block">
             <h1 class="page-title m-0">Users</h1>
-            <span class="task-count-badge">{{ users.length }}</span>
         </div>
         @if (showAddUser()) {
         <button mat-raised-button color="primary" class="add-btn" (click)="openTaskDialog()">
@@ -17,7 +16,7 @@
     <div class="toolbar-row mb-3">
         <mat-form-field appearance="outline" class="status-filter">
             <mat-label>Filter by Role</mat-label>
-            <mat-select [(value)]="selectedStatusFilter" (selectionChange)="refresh()">
+            <mat-select value="all" (selectionChange)="filter$.next($event.value)">
                 <mat-option value="all">All</mat-option>
                 @for (item of ROLE_OPTIONS; track $index) {
                 <mat-option [value]="item.value">{{item.label}}</mat-option>
@@ -29,17 +28,25 @@
     <mat-divider class="mb-3"></mat-divider>
 
     <div class="table-responsive">
-        @if (users.length === 0) {
-        <div class="empty-state text-center p-5">
-            <mat-icon color="disabled">account_circle</mat-icon>
-            <p class="empty-title m-0">No users found</p>
-            <p class="empty-subtitle text-muted">
-                {{ selectedStatusFilter === 'all' ? 'No users assigned yet.' : 'No ' + selectedStatusFilter + ' tasks
-                right now.' }}
-            </p>
-        </div>
+        @if (user$ | async; as users) {
+            @if (users.length === 0) {
+                <div class="empty-state text-center p-5">
+                    <mat-icon color="disabled">account_circle</mat-icon>
+                    <p class="empty-title m-0">No users found</p>
+                    <p class="empty-subtitle text-muted">
+                        {{ filter$.value === 'all' ? 'No users assigned yet.' : 'No ' + filter$.value + ' tasks right now.' }}
+                    </p>
+                </div>
+            } @else {
+                <app-list [data]="users" [columns]="columns" [options]="options"></app-list>
+            }
         } @else {
-        <app-list [data]="users" [columns]="columns" [options]="options"></app-list>
+            <div class="loading-container">
+                <div class="loading-shimmer">
+                    <mat-spinner diameter="24"></mat-spinner>
+                    <p>Loading tasks...</p>
+                </div>
+            </div>
         }
     </div>
 </div>

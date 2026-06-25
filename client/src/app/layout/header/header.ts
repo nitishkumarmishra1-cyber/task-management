@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,6 +13,7 @@ import { Notification } from '@app/shared/services/notification';
 import { ApiResponse } from '@app/shared/interfaces';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SocketService } from '@app/shared/services/socket';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header',
@@ -33,6 +34,7 @@ export class Header {
   private dialog = inject(MatDialog);
   private socket = inject(SocketService);
   public notificationCount = signal(0);
+  private destroyRef = inject(DestroyRef);
   private readonly socketEvent : string = 'notification:update';
 
   currentUsername = '';
@@ -61,7 +63,7 @@ export class Header {
 
   getCount() {
     console.log('sdfdsgfd')
-    this.notification.unseenCount().subscribe({
+    this.notification.unseenCount().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next : (response : ApiResponse<number>) => {
         this.notificationCount.set(response.data)
       },

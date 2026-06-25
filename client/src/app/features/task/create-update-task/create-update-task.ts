@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiResponse, ITask, IUser, STATUS } from '../../../shared/interfaces';
@@ -8,6 +8,8 @@ import { Task } from '@app/shared/services/task';
 import { AlertService } from '@app/shared/services/snackbar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Auth } from '@app/shared/services/auth';
+import { User } from '@app/shared/services/user';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-create-update-task',
@@ -28,9 +30,12 @@ export class CreateUpdateTask implements OnInit {
   private dialogRef = inject(MatDialogRef<CreateUpdateTask>);
   private alert = inject(AlertService);
   private auth = inject(Auth);
-  public data : { task : ITask, canReassign : boolean, assignableUsers : IUser[] } | any = inject<CreateUpdateTask>(MAT_DIALOG_DATA);
+  private user = inject(User)
+  public data : { task : ITask, canReassign : boolean } | any = inject<CreateUpdateTask>(MAT_DIALOG_DATA);
+  private destroyRef = inject(DestroyRef);
 
   taskForm!: FormGroup;
+  assignableUsers$ = this.user.assignableUsers();
   isEditMode = false;
   STATUS_OPTIONS = Constant.STATUS_OPTIONS;
   isSubmitting = signal(false);
@@ -78,7 +83,7 @@ export class CreateUpdateTask implements OnInit {
       $performAction = this.task.update(this.data?.task?.id, payload)
     }
 
-    $performAction.subscribe({
+    $performAction.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response: ApiResponse<ITask>) => {
         this.alert.success(response.message);
         this.dialogRef.close(true);

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../shared/modules/material-module';
 import { Auth } from '../../shared/services/auth';
@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '../../shared/services/snackbar';
 import { Router } from '@angular/router';
 import { Constant } from '@app/utility/constant';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class Login {
   private fb: FormBuilder = inject(FormBuilder)
   private alert = inject(AlertService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   loginForm: FormGroup;
   hidePassword = true;
@@ -48,7 +50,7 @@ export class Login {
     this.isSubmitting.set(true);
     const credentials = this.loginForm.value;
 
-    this.auth.login(credentials).subscribe({
+    this.auth.login(credentials).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response: ApiResponse<IUser>) => {
         this.auth.update = response.data;
         this.alert.success(response.message);

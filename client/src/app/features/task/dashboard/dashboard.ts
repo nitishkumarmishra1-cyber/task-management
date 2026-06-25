@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit, OnDestroy, OnChanges, DestroyRef, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUpdateTask } from '../create-update-task/create-update-task';
 import { ApiResponse, FILTER, ITask, IUser, ROLE } from '@app/shared/interfaces';
@@ -10,9 +10,10 @@ import { Task } from '@app/shared/services/task';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '@app/shared/services/snackbar';
 import { Constant } from '@app/utility/constant';
-import { User } from '@app/shared/services/user';
 import { toCapitalCase } from '@app/utility/util';
 import { SocketService } from '@app/shared/services/socket';
+import { BehaviorSubject, debounceTime, map, merge, Observable, Subject, switchMap } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,23 +23,30 @@ import { SocketService } from '@app/shared/services/socket';
   styleUrl: './dashboard.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Dashboard {
+export class Dashboard implements OnInit, OnChanges, OnDestroy {
   private task = inject(Task);
-  private user = inject(User);
   private auth = inject(Auth);
   private alert = inject(AlertService);
-  public selectedStatusFilter: FILTER = FILTER.ALL;
   private dialog = inject(MatDialog);
-  private cdr = inject(ChangeDetectorRef);
   private socket = inject(SocketService);
+  private destroyRef = inject(DestroyRef);
+
   private readonly socketEvent: string = 'task:update';
+  public filter$ = new BehaviorSubject<FILTER>(FILTER.ALL);
+  private refresh$ = new Subject<void>();
 
   @Input() taskType: 'my' | 'team' | 'all' = 'my';
 
-  // meta info
-  public tasks: ITask[] = [];
-  private users: IUser[] = [];
-  public pageTitle: string = '';
+  public task$: Observable<ITask[]> = merge(
+    this.filter$.asObservable(),
+    this.refresh$.pipe(map(() => this.filter$.value))
+  ).pipe(
+    debounceTime(500),
+    switchMap((value: FILTER) => this.task.taskList(this.taskType, value))
+  );
+
+  public pageTitle = signal('');
+  public tasks = toSignal(this.task$, { initialValue: [] });
 
   public STATUS_OPTIONS = Constant.STATUS_OPTIONS;
   public options: ListAction[] = [
@@ -55,44 +63,14 @@ export class Dashboard {
   ];
 
   ngOnInit() {
-    this.userList();
-
-    // registering this event so update whenever event comes
-    this.socket.on(this.socketEvent, data => {
-      console.log('socket event received', data.eventId, data.timestamp);
-      this.refresh()
+    this.socket.on(this.socketEvent, () => {
+      this.refresh$.next();
     });
   }
 
   ngOnChanges() {
-    this.pageTitle = toCapitalCase(this.taskType);
-    this.refresh();
-  }
-
-  refresh() {
-    this.task.taskList(this.taskType, this.selectedStatusFilter).subscribe({
-      next: (response: ApiResponse<ITask[]>) => {
-        this.tasks = [...response.data];
-        this.cdr.markForCheck()
-      },
-      error: (error: HttpErrorResponse) => {
-        this.alert.error(error.error.message);
-      }
-    })
-  }
-
-  userList() {
-    // user cannot access this API so this check will not call any API
-    if (this.auth.user?.role === ROLE.USER) return;
-
-    this.user.assignableUsers().subscribe({
-      next: (response: ApiResponse<IUser[]>) => {
-        this.users = response.data;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.alert.error(error.error.message);
-      }
-    })
+    this.pageTitle.set(toCapitalCase(this.taskType));
+    this.refresh$.next();
   }
 
   openTaskDialog(taskToEdit: ITask | null = null): void {
@@ -101,45 +79,46 @@ export class Dashboard {
       disableClose: true,
       data: {
         task: taskToEdit,
-        canReassign: [ROLE.MANAGER, ROLE.TEAM_LEAD].includes(this.auth.user!.role),
-        assignableUsers: this.users
+        canReassign: [ROLE.MANAGER, ROLE.TEAM_LEAD].includes(this.auth.user!.role)
       }
     });
 
-    dialogRef.afterClosed().subscribe((formResult: any) => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((formResult: any) => {
       if (!formResult) return;
-      this.refresh();
+      this.refresh$.next();
     });
   }
 
   deleteTask(id?: string): void {
     if (id && confirm('Are you sure you want to remove this task?')) {
-      this.task.delete(id).subscribe({
+      this.task.delete(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (response: ApiResponse<ITask>) => {
           this.alert.success(response.message);
-          this.refresh();
+          this.refresh$.next();
         },
         error: (error: HttpErrorResponse) => {
           this.alert.error(error.error.message);
         }
-      })
+      });
     }
   }
 
   markTaskComplete(id: string): void {
-    this.task.markTaskComplete(id).subscribe({
+    this.task.markTaskComplete(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response: ApiResponse<ITask>) => {
         this.alert.success(response.message);
-        this.refresh();
+        this.refresh$.next();
       },
       error: (error: HttpErrorResponse) => {
         this.alert.error(error.error.message);
       }
-    })
+    });
   }
 
-  ngOnDestory() {
-    this.socket.off(this.socketEvent)
+  ngOnDestroy() {
+    this.socket.off(this.socketEvent);
     this.socket.disconnect();
+    this.refresh$.complete();
+    this.filter$.complete();
   }
 }
