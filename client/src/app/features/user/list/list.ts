@@ -22,7 +22,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styles: []
 })
 export class UserList {
-  public selectedStatusFilter: USER_FILTER = USER_FILTER.ALL;
   private dialog = inject(MatDialog);
   private user = inject(User);
   private alert = inject(AlertService);
