@@ -71,7 +71,7 @@ export default class UserService {
         }
 
         // for manager we don't need reportTo
-        if (data.role === ROLE.MANAGER && auth_User.role === ROLE.MANAGER && !data.reportTo) {
+        if (!data.reportTo) {
             data.reportTo = undefined;
         }
 

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { AuthService } from "./auth.service.js";
 import { AuthController } from "./auth.controller.js";
 import { validate } from "../../middleware/validate.middleware.js";
-import { LoginUserSchema } from "./auth.dto.js";
+import { LoginUserSchema, RegisterUserSchema } from "./auth.dto.js";
 import asyncHandler from "../../core/asyn-handler.js";
 import { authenticate } from "../../middleware/auth.middleware.js";
 
@@ -14,6 +14,12 @@ authRoutes.post(
     '/login',
     validate(LoginUserSchema),
     asyncHandler(controller.userLogin.bind(controller))
+);
+
+authRoutes.post(
+    '/register',
+    validate(RegisterUserSchema),
+    asyncHandler(controller.register.bind(controller))
 );
 
 authRoutes.post(

@@ -5,13 +5,13 @@ import { Auth } from '../../shared/services/auth';
 import { ApiResponse, IUser } from '../../shared/interfaces';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AlertService } from '../../shared/services/snackbar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Constant } from '@app/utility/constant';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
-  imports: [MaterialModule, ReactiveFormsModule],
+  imports: [MaterialModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })

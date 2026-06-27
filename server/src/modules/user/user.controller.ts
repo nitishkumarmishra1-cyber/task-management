@@ -17,6 +17,7 @@ export default class UserController {
         sendSuccess(response, HTTP_STATUS.CREATED, MESSAGES.USER.CREATED)
     }
 
+
     async assignableUsers(request: AuthenticatedRequest, response: Response): Promise<void> {
         const users = await this.service.assignableUsers(request.user as IUser);
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, users)

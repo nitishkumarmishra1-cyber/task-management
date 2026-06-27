@@ -7,6 +7,7 @@ export class Constant {
 
     // auth api endpoints
     public static readonly LOGIN = 'auth/login';
+    public static readonly REGISTER_USER = 'auth/register';
     public static readonly LOGOUT = 'auth/logout';
     public static readonly USER_STORE_KEY = `user-login-cortext-ai-user-status`;
 

@@ -9,7 +9,7 @@ export const CreateUserSchema = z.object({
         email: z.email('Invalid email format'),
         role: z.enum(ROLE),
         password: z.string().min(8, 'Password must be at least 8 characters').regex(AppConstant.PASSSWORD_PATTERN, 'Password must include an uppercase letter, lowercase letter, number, and special character.'),
-        reportTo: z.string()
+        reportTo: z.string().optional()
     }),
 });
 

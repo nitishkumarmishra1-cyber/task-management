@@ -18,6 +18,10 @@ export class User {
     return this.api.post<ApiResponse<IUser>>(Constant.CREATE_USER, data)
   }
 
+  public register(data: IUser): Observable<ApiResponse<IUser>> {
+    return this.api.post<ApiResponse<IUser>>(Constant.REGISTER_USER, data)
+  }
+
   public update(id: string, data: IUser): Observable<ApiResponse<IUser>> {
     return this.api.patch<ApiResponse<IUser>>(`${Constant.UPDATE_USER}${id}`, data)
   }

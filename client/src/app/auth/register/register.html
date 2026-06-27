@@ -55,7 +55,12 @@
             }
             @if (password?.hasError('minlength') && !password?.hasError('required')) {
             <mat-error>
-              Password must be at least 6 characters
+              Password must be at least 8 characters
+            </mat-error>
+            }
+            @if (password?.hasError('pattern') && !password?.hasError('minlength') && !password?.hasError('required')) {
+            <mat-error>
+                Password must include an uppercase letter, lowercase letter, number, and special character.
             </mat-error>
             }
           </mat-form-field>
@@ -85,7 +90,7 @@
 
           <div class="text-center mt-2">
             <span>Already have an account? </span>
-            <a routerLink="/login">Sign in</a>
+            <a href="javascript:void(9)" routerLink="/auth/login">Sign in</a>
           </div>
 
         </form>

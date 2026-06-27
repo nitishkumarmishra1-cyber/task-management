@@ -1,9 +1,10 @@
 import userRepository from '../user/user.repository.js';
 import { AppError } from '../../core/app.error.js';
-import { LoginUserDto } from './auth.dto.js';
-import { verifyPassword } from '../../shared/utility/password.js';
+import { LoginUserDto, RegisterUserDto } from './auth.dto.js';
+import { hashPassword, verifyPassword } from '../../shared/utility/password.js';
 import { signToken } from '../../shared/utility/jwt.js';
 import { HTTP_STATUS, MESSAGES } from '../../core/message.js';
+import { ROLE } from '../../shared/interfaces/user.js';
 
 export class AuthService {
 
@@ -24,5 +25,25 @@ export class AuthService {
 
         const userObj = user.toJSON();
         return { token, user: userObj };
+    }
+
+    async register(data: RegisterUserDto) {
+        const existingUser = await userRepository.existsByEmail(data.email);
+        if (existingUser) {
+            throw new AppError(MESSAGES.USER.EMAIL_ALREADY_EXISTS, HTTP_STATUS.BAD_REQUEST);
+        }
+
+        const hashedPassword = await hashPassword(data.password);
+
+        const user = await userRepository.create({
+            name : data.name,
+            email : data.email,
+            password: hashedPassword,
+            role : ROLE.USER
+        });
+
+        const userObj = user.toObject();
+        delete userObj.password;
+        return userObj;
     }
 }
