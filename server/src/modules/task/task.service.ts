@@ -27,7 +27,7 @@ export default class TaskService {
 
             // sending notification to user
             await notificationRepository.create(notification)
-            eventBus.emit(AppConstant.NOTIFICATION_UPDATE, { userId : data.assignTo, data : { status : true, eventId: crypto.randomUUID(), 'notification:update' : true } });
+            eventBus.emit(AppConstant.NOTIFICATION_UPDATE, { userId : data.assignTo, data : { status : true, eventId: crypto.randomUUID(), 'notification:update' : true, message : notification.title } });
             eventBus.emit(AppConstant.TASK_UPDATE, { userId : data.assignTo, data : { status : true, eventId: crypto.randomUUID(), 'task:update' : true } });
         }
 
@@ -85,6 +85,9 @@ export default class TaskService {
 
             // sending notification to user
             await notificationRepository.create(notification)
+            eventBus.emit(AppConstant.NOTIFICATION_UPDATE, { userId : data.assignTo, data : { status : true, eventId: crypto.randomUUID(), 'notification:update' : true, message : notification.title } });
+            eventBus.emit(AppConstant.TASK_UPDATE, { userId : data.assignTo, data : { status : true, eventId: crypto.randomUUID(), 'task:update' : true } });
+            eventBus.emit(AppConstant.TASK_UPDATE, { userId : existingTask?.assignTo?.toString(), data : { status : false, eventId: crypto.randomUUID(), 'task:update' : true } });
         }
 
         return task;

@@ -31,5 +31,12 @@ export const GetUserSchema = z.object({
     })
 });
 
+
+export const DeletedUserSchema = z.object({
+    params: z.object({
+        id: objectIdSchema
+    })
+});
+
 export type CreateUserDto = z.infer<typeof CreateUserSchema>['body'];
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>['body'];

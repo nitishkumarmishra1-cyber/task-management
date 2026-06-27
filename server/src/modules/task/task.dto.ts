@@ -32,5 +32,11 @@ export const GetTaskSchema = z.object({
     })
 });
 
+export const DeletedTaskSchema = z.object({
+    params: z.object({
+        id: objectIdSchema
+    })
+});
+
 export type CreateTaskDto = z.infer<typeof CreateTaskSchema>['body'];
 export type UpdateTaskDto = z.infer<typeof UpdateTaskSchema>['body'];

@@ -5,7 +5,7 @@ import asyncHandler from "../../core/asyn-handler.js";
 import { authorize } from "../../middleware/role.middleware.js";
 import { ROLE } from "../../shared/interfaces/user.js";
 import { validate } from "../../middleware/validate.middleware.js";
-import { GetUserSchema, UpdateUserSchema } from "./user.dto.js";
+import { DeletedUserSchema, GetUserSchema, UpdateUserSchema } from "./user.dto.js";
 
 const userRoutes = Router();
 const service = new UserService();
@@ -22,6 +22,11 @@ userRoutes.get(
     asyncHandler(controller.assignableUsers.bind(controller))
 );
 userRoutes.get(
+    '/teamLead',
+    authorize(ROLE.MANAGER, ROLE.TEAM_LEAD),
+    asyncHandler(controller.reportingUsers.bind(controller))
+);
+userRoutes.get(
     '/list',
     authorize(ROLE.MANAGER, ROLE.TEAM_LEAD),
     validate(GetUserSchema),
@@ -31,6 +36,12 @@ userRoutes.patch(
     '/:id',
     validate(UpdateUserSchema),
     asyncHandler(controller.update.bind(controller))
+);
+userRoutes.delete(
+    '/:id',
+    authorize(ROLE.MANAGER, ROLE.TEAM_LEAD),
+    validate(DeletedUserSchema),
+    asyncHandler(controller.delete.bind(controller))
 );
 
 export default userRoutes;

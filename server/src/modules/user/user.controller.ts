@@ -22,6 +22,11 @@ export default class UserController {
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, users)
     }
 
+    async reportingUsers(request: AuthenticatedRequest, response: Response): Promise<void> {
+        const users = await this.service.reportingUsers(request.user as IUser);
+        sendSuccess(response, HTTP_STATUS.OK, MESSAGES.GENERIC.SUCCESS, users)
+    }
+
     async userList(request: AuthenticatedRequest, response: Response): Promise<void> {
         const id = request.user!.id as string;
         const role = request.user!.role as ROLE;
@@ -43,5 +48,11 @@ export default class UserController {
         const id = request.params!.id as string;
         const user = await this.service.updateUser(id, request.body, request.user as IUser)
         sendSuccess(response, HTTP_STATUS.OK, MESSAGES.USER.UPDATED, user)
+    }
+
+    async delete(request: AuthenticatedRequest, response: Response): Promise<void> {
+        const id = request.params!.id as string;
+        const user = await this.service.deleteUser(id, request.user as IUser)
+        sendSuccess(response, HTTP_STATUS.OK, MESSAGES.USER.DELETED, user)
     }
 }

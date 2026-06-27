@@ -1,7 +1,7 @@
 import User from './user.model.js';
 import { CreateUserDto, UpdateUserDto } from './user.dto.js';
 import { toObjectId } from '../../shared/utility/util.js';
-import { FILTER } from '../../shared/interfaces/user.js';
+import { FILTER, ROLE } from '../../shared/interfaces/user.js';
 
 export class UserRepository {
     async create(data: CreateUserDto) {
@@ -31,6 +31,10 @@ export class UserRepository {
 
     async findReporteesWithTeamLead(userId : string) {
         return User.find({ isActive : true, $or : [{ _id : toObjectId(userId) }, { reportTo : toObjectId(userId) }] })
+    }
+
+    async findManagerWithTeamLead(userId : string) {
+        return User.find({ isActive : true, $or : [{ role : ROLE.TEAM_LEAD }, { role : ROLE.MANAGER }] })
     }
 
     async findReportees(userId : string, roleFilter : FILTER = FILTER.ALL) {

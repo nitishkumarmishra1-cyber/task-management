@@ -40,7 +40,11 @@ export default class UserService {
         }
     }
 
-    async userList(userId: string, role: ROLE, roleFilter : FILTER = FILTER.ALL) {
+    async reportingUsers(user: IUser) {
+        return userRepository.findManagerWithTeamLead(user.id);
+    }
+
+    async userList(userId: string, role: ROLE, roleFilter: FILTER = FILTER.ALL) {
         if (role === ROLE.MANAGER) {
             return userRepository.findAll(userId, roleFilter);;
         } else {
@@ -50,11 +54,15 @@ export default class UserService {
 
     async updateUser(id: string, data: UpdateUserDto, auth_User: IUser) {
         // this record can only update by self and manager
-        if (!(auth_User.role === ROLE.MANAGER || auth_User.id === id)) {
+        if (!(auth_User.role === ROLE.MANAGER || auth_User.role === ROLE.TEAM_LEAD || auth_User.id === id)) {
             throw new AppError(MESSAGES.GENERIC.FORBIDDEN, HTTP_STATUS.FORBIDDEN)
         }
 
         const existingUser = await userRepository.findById(id);
+        if (auth_User.role === ROLE.TEAM_LEAD && existingUser?.reportTo?.toString() !== auth_User.id && auth_User.id !== id) {
+            throw new AppError(MESSAGES.GENERIC.FORBIDDEN, HTTP_STATUS.FORBIDDEN)
+        }
+
         if (existingUser.email !== data.email) {
             const hasEmail = await userRepository.existsByEmail(data!.email as string);
             if (hasEmail) {
@@ -63,7 +71,7 @@ export default class UserService {
         }
 
         // for manager we don't need reportTo
-        if(data.role === ROLE.MANAGER && auth_User.role === ROLE.MANAGER && !data.reportTo) {
+        if (data.role === ROLE.MANAGER && auth_User.role === ROLE.MANAGER && !data.reportTo) {
             data.reportTo = undefined;
         }
 
@@ -74,8 +82,21 @@ export default class UserService {
         return user;
     }
 
-    async deleteUser(id: string) {
-        const user = await userRepository.deleteById(id);
+    async deleteUser(id: string, authUser: IUser) {
+        let user;
+
+        if (authUser.role === ROLE.MANAGER) {
+            user = await userRepository.deleteById(id);
+        } else {
+            // on team lead can delete their own reportee
+            const existingUser = await userRepository.findById(id);
+            if (existingUser?.reportTo?.toString() !== authUser.id) {
+                throw new AppError(MESSAGES.GENERIC.FORBIDDEN, HTTP_STATUS.FORBIDDEN)
+            }
+
+            user = await userRepository.deleteById(id);
+        }
+
         if (!user) {
             throw new AppError(MESSAGES.USER.NOT_FOUND, HTTP_STATUS.NOT_FOUND);
         }
