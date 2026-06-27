@@ -33,7 +33,7 @@ export class CreateUpdateUser implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   userForm!: FormGroup;
-  assignableUsers$ = this.user.assignableUsers();
+  teamLeadUsers$ = this.user.teamLeadUsers();
   isEditMode = false;
   hidePassword = true;
   ROLE_OPTIONS = Constant.ROLE_OPTION(this.auth.user?.role as ROLE);
@@ -72,7 +72,7 @@ export class CreateUpdateUser implements OnInit {
         [Validators.required]
       ],
       reportTo: [
-        { value: this.data?.user?.reportTo?.id || '', disabled: this.data?.user?.role === ROLE.TEAM_LEAD },
+        { value: this.data?.user?.reportTo?.id || '', disabled: this.data?.user?.role === ROLE.TEAM_LEAD || this.auth.user?.role === ROLE.TEAM_LEAD },
         [Validators.required]
       ],
       password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(Constant.PASSSWORD_PATTERN)]]

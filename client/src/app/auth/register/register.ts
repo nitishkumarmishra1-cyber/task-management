@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../shared/modules/material-module';
 import { passwordsMatchValidator } from '../customValidator';
@@ -7,6 +7,7 @@ import { ApiResponse, IUser } from '@app/shared/interfaces';
 import { AlertService } from '@app/shared/services/snackbar';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +20,7 @@ export class Register {
   private fb: FormBuilder = inject(FormBuilder)
   private alert = inject(AlertService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   registerForm: FormGroup;
   hidePassword = true;
@@ -58,7 +60,7 @@ export class Register {
 
     this.isSubmitting.set(true);
 
-    this.user.create(this.registerForm.value).subscribe({
+    this.user.create(this.registerForm.value).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response: ApiResponse<IUser>) => {
         this.alert.success(response.message);
         this.router.navigateByUrl('/auth/login');

@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../shared/modules/material-module';
 import { Auth } from '../../shared/services/auth';
 import { ApiResponse, IUser } from '../../shared/interfaces';

@@ -44,15 +44,14 @@ export class UserList {
 
   public options: ListAction[] = [
     { id: '1', name: 'edit', listener: (user: IUser) => this.openTaskDialog(user) },
-    { id: '2', name: 'deleted', listener: (id: string) => this.deleteTask(id) }
+    { id: '2', name: 'deleted', listener: (user: IUser) => this.deleteTask(user.id) }
   ];
 
   public columns: ListColumn[] = [
     { key: 'name', label: 'Name', sortable: true, type: 'text', truncateLength: 0 },
     { key: 'email', label: 'Email', sortable: false, type: 'text', truncateLength: 0 },
     { key: 'role', label: 'Role', sortable: false, type: 'text', truncateLength: 0 },
-    { key: 'reportToName', label: 'Report To', sortable: false, type: 'text', truncateLength: 0 },
-    { key: 'isActive', label: 'Status', sortable: false, type: 'text', truncateLength: 0 },
+    { key: 'reportToName', label: 'Report To', sortable: false, type: 'text', truncateLength: 0 }
   ];
 
 

@@ -18,7 +18,7 @@ export class List implements OnChanges, AfterViewInit {
   @Input() data: any[] = [];
   @Input() columns: ListColumn[] = [];
   @Input() options: ListAction[] = [];
-  @Input() pageSizeOptions: number[] = [5, 10, 20];
+  @Input() pageSizeOptions: number[] = [10, 20];
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;

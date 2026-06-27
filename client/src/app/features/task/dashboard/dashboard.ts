@@ -12,7 +12,7 @@ import { AlertService } from '@app/shared/services/snackbar';
 import { Constant } from '@app/utility/constant';
 import { toCapitalCase } from '@app/utility/util';
 import { SocketService } from '@app/shared/services/socket';
-import { BehaviorSubject, debounceTime, finalize, map, merge, Observable, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, finalize, map, merge, Observable, Subject, switchMap, tap, throttleTime } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -44,8 +44,7 @@ export class Dashboard implements OnInit, OnChanges, OnDestroy {
   ).pipe(
     tap(() => this.isLoading.set(true)),
     debounceTime(500),
-    switchMap((value: FILTER) => this.task.taskList(this.taskType, value)),
-    finalize(() => this.isLoading.set(false))
+    switchMap((value: FILTER) => this.task.taskList(this.taskType, value).pipe(finalize(() => this.isLoading.set(false))))
   );
 
   public pageTitle = signal('');
@@ -55,7 +54,7 @@ export class Dashboard implements OnInit, OnChanges, OnDestroy {
   public options: ListAction[] = [
     { id: '1', name: 'edit', listener: (task: ITask) => this.openTaskDialog(task) },
     { id: '3', name: 'check_circle', condition: { key: 'status', value: 'pending' }, listener: (task: ITask) => this.markTaskComplete(task!.id as string) },
-    { id: '2', name: 'deleted', listener: (id: string) => this.deleteTask(id) }
+    { id: '2', name: 'deleted', listener: (task: ITask) => this.deleteTask(task.id) }
   ];
 
   public columns: ListColumn[] = [

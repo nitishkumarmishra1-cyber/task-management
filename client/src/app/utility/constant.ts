@@ -15,6 +15,7 @@ export class Constant {
     public static readonly USER_LIST = 'user/list';
     public static readonly USER_ME = 'user/me';
     public static readonly ASSIGNABLE_USER = 'user/assignable';
+    public static readonly TEAM_LEAD_USER = 'user/teamLead';
     public static readonly UPDATE_USER = 'user/';
     public static readonly DELETE_USER = 'user/';
 

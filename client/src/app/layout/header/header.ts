@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,10 +10,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateUpdateUser } from '@app/features/user/create-update-user/create-update-user';
 import { toCapitalCase } from '@app/utility/util';
 import { Notification } from '@app/shared/services/notification';
-import { ApiResponse } from '@app/shared/interfaces';
-import { HttpErrorResponse } from '@angular/common/http';
 import { SocketService } from '@app/shared/services/socket';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BehaviorSubject, combineLatest, switchMap } from 'rxjs';
+import { AlertService } from '@app/shared/services/snackbar';
 
 @Component({
   selector: 'app-header',
@@ -33,44 +33,39 @@ export class Header {
   private notification = inject(Notification);
   private dialog = inject(MatDialog);
   private socket = inject(SocketService);
-  public notificationCount = signal(0);
-  private destroyRef = inject(DestroyRef);
-  private readonly socketEvent : string = 'notification:update';
+  private alert = inject(AlertService);
+  private refresh$ = new BehaviorSubject<null>(null);
 
-  currentUsername = '';
-  currentUserRole = '';
+  
+  public currentUsername = '';
+  public currentUserRole = '';
+  private readonly socketEvent : string = 'notification:update';
+  private notification$ = combineLatest([
+    this.refresh$.asObservable(),
+  ]).pipe(
+    switchMap(() => this.notification.unseenCount())
+  );
+
+  notificationCount = toSignal(this.notification$, { initialValue : 0 });
 
   ngOnInit(): void {
     this.currentUsername = toCapitalCase(this.auth.user!.name ?? '');
     this.currentUserRole = toCapitalCase(this.auth.user!.role ?? '');
-    this.getCount();
 
     // registering this event so update whenever event comes
-    this.socket.on(this.socketEvent, this.getCount.bind(this))
+    this.socket.on(this.socketEvent, (data) => {
+      const message : string = data?.message ?? '';
+      if(message) this.alert.success(message);
+      this.refresh$.next(null);
+    })
   }
 
   editProfile() : void {
-    const dialogRef = this.dialog.open(CreateUpdateUser, {
+    this.dialog.open(CreateUpdateUser, {
       width: '550px',
       disableClose: true,
       data: { user: this.auth.user, assignableUsers : [] }
     });
-
-    dialogRef.afterClosed().subscribe((formResult: any) => {
-      if (!formResult) return;
-    });
-  }
-
-  getCount() {
-    console.log('sdfdsgfd')
-    this.notification.unseenCount().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next : (response : ApiResponse<number>) => {
-        this.notificationCount.set(response.data)
-      },
-      error : (error : HttpErrorResponse) => {
-        // 
-      }
-    })
   }
 
   ngOnDestory() {
